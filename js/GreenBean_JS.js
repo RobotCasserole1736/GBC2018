@@ -12,16 +12,6 @@
 /* constructor for goals_t objects */
 
 
-/* constructor for goals_t objects */
-function goal_t(high, low, points, high_points, low_points)
-{
-    this.high = high;
-    this.low = low;
-    this.points = points;
-    this.high_points = high_points;
-    this.low_points = low_points;
-}
-
 /* global variables */
 
 /* Penalty Variables */
