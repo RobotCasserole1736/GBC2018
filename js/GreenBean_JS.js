@@ -89,7 +89,44 @@ function update_data()
     /* update display */
     disp_update();
 }
-
+function proccess_Period(type){
+	switch(type){
+		case 'StartSuto':
+		console.log('clickUno');
+		break;
+		
+		case 'StartTeleop':
+		console.log('clickDos');
+		break;
+		
+		case 'EndMatch':
+		console.log('clickTres');
+		break;
+	}
+}
+function proccess_Event(type){
+	switch (type){
+		case 'PickedUpCube':
+		console.log('click1');
+		break;
+	
+		case 'PlacedOnScale':
+		console.log('click2');
+		break;
+		
+		case 'PlacedOnSwitch':
+		console.log('click3');
+		break;
+		
+		case 'PlacedOnOpSwitch':
+		console.log('click4');
+		break;
+		
+		case 'PlacedInExchange':
+		console.log('click5');
+		break;
+	}
+}
 /* 
  * Updates the page displays
  */
