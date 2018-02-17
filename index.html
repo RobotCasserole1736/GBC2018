@@ -56,15 +56,15 @@
             <!-- ------------------------------ -->
             
             <h1>Match State</h1>
-            <button id="StartAuto" onclick="console.log('click');">Start Auto </button>
-            <button id="StartTele" onclick="console.log('click');">Start Teleop</button>
-            <button id="EndMatch" onclick="console.log('click');">End of Match</button>
+            <button id="StartAuto" onclick="proccess_Period('StartSuto');">Start Auto </button>
+            <button id="StartTele" onclick="proccess_Period('StartTeleop');">Start Teleop</button>
+            <button id="EndMatch" onclick="proccess_Period('EndMatch');">End of Match</button>
             <h1>Robot Actions </h1>
-            <button id="PickedUpCube" onclick="console.log('click');">Picked Up Cube</button>
-            <button id="PlacedOnScale" onclick="console.log('click');">Placed On Scale</button>
-            <button id="PlacedOnSwitch" onclick="console.log('click');">Placed On Switch</button>
-            <button id="PlacedOnOpSwitch" onclick="console.log('click');">Placed On Opponent Switch</button>
-            <button id="PlacedOnScale" onclick="console.log('click');">Placed In Exchange</button>
+            <button id="PickedUpCube" onclick="proccess_Event('PickedUpCube');">Picked Up Cube</button>
+            <button id="PlacedOnScale" onclick="proccess_Event('PlacedOnScale');">Placed On Scale</button>
+            <button id="PlacedOnSwitch" onclick="proccess_Event('PlacedOnSwitch');">Placed On Switch</button>
+            <button id="PlacedOnOpSwitch" onclick="proccess_Event('PlacedOnOpSwitch');">Placed On Opponent Switch</button>
+            <button id="PlacedInExchange" onclick="proccess_Event('PlacedInExchange');">Placed In Exchange</button>
 
             
         </div>
