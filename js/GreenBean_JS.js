@@ -179,6 +179,14 @@ function disp_update()
 }
 
 /*
+ * Handles key presses
+ */
+function keyPressHandler(event) {
+    var x = event.key;
+    console.log("The pressed key was: " + x);
+}
+
+/*
  * Updates the points values
  */
 function update_points()
