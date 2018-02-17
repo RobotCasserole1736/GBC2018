@@ -221,6 +221,30 @@ function disp_update()
 function keyPressHandler(event) {
     var x = event.key;
     console.log("The pressed key was: " + x);
+    if (x == " "){ 
+        proccess_Event('PickedUpCube');
+    }
+    if (x == "w"){ 
+        proccess_Event('PlacedOnSwitch');
+    }
+    if (x == "a"){ 
+        proccess_Event('PlacedOnScale');
+    }
+    if (x == "s"){ 
+        proccess_Event('PlacedOnOpSwitch');
+    }
+    if (x == "d"){ 
+        proccess_Event('PlacedInExchange');
+    }
+    if (x == "1"){ 
+        proccess_Period('StartSuto');
+    }
+    if (x == "2"){ 
+        proccess_Period('StartTeleop');
+    }
+    if (x == "3"){ 
+        proccess_Period('EndMatch');
+    }
 }
 
 /*
