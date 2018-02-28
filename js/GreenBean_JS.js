@@ -304,7 +304,7 @@ function keyPressHandler(event) {
         proccess_Event('PlacedInExchange');
     }
     if (x == "1"){ 
-        proccess_Period('StartSuto');
+        proccess_Period('StartAuto');
     }
     if (x == "2"){ 
         proccess_Period('StartTeleop');
