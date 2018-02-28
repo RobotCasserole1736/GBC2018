@@ -21,8 +21,6 @@ var penalty_auto = 0;
 var technical_auto = 0;
 var penalty_tele = 0;
 var technical_tele = 0;
-var penalty_end = 0;
-var technical_end = 0;
 
 var penalty_stack = new Array();
 
@@ -104,11 +102,23 @@ function proccess_Period(type){
         match_period = 'none';
 		break;
 	}
+    
+    disp_update();
 	
 }
 
 function proccess_Event(type){
 	switch (type){
+        case 'CrossBaseline':
+            console.log('Processing Baseline Cross');
+            if(match_period == 'auto') {
+                auto_current_time = Date.now();
+                auto_elapsed_time = auto_current_time - auto_start_time;
+                console.log(auto_elapsed_time);
+            }
+		
+		break;
+        
 		case 'PickedUpCube':
             console.log('Processing Cube Picked Up');
             if(match_period == 'auto') {
@@ -194,7 +204,13 @@ function proccess_Event(type){
             } 				
 
 		break;
+        
+        default:
+            console.log('developers did something wrong' );
+        break;
 	}
+    
+    disp_update();
 }
 /* 
  * Updates the page displays
@@ -264,8 +280,6 @@ function disp_update()
     document.getElementById("technical_display1").innerHTML = technical_auto;
     document.getElementById("penalty_display2").innerHTML = penalty_tele;
     document.getElementById("technical_display2").innerHTML = technical_tele;
-    document.getElementById("penalty_display3").innerHTML = penalty_end;
-    document.getElementById("technical_display3").innerHTML = technical_end;
 }
 
 /*
@@ -345,8 +359,10 @@ function score_change(period, status, goal, change)
 /*
  * Asses a penalty
  */
-function new_penalty(type, period)
+function new_penalty(type)
 {
+    var period = match_period;
+    console.log('got new penalty ' + type + ' ' + period);
     switch(period)
     {
         case 'auto':
@@ -368,17 +384,6 @@ function new_penalty(type, period)
                     break;
                 case 'technical':
                     technical_tele++;
-                    break;
-            }
-            break;
-        case 'end':
-            switch(type)
-            {
-                case 'penalty':
-                    penalty_end++;
-                    break;
-                case 'technical':
-                    technical_end++;
                     break;
             }
             break;
@@ -490,8 +495,6 @@ function reset_form()
     technical_auto = 0;
     penalty_tele = 0;
     technical_tele = 0;
-    penalty_end = 0;
-    technical_end = 0;
     document.getElementById("Overall_Rating").value = 0;
     document.getElementById("Comments").value="";
     
@@ -583,15 +586,6 @@ function Undo_Penalty()
                     penalty_tele--; break;
                 case 'technical':
                     technical_tele--; break;
-                }
-                break;
-            case 'end':
-                switch(type)
-                {
-                case 'penalty':
-                    penalty_end--; break;
-                case 'technical':
-                    technical_end--; break;
                 }
                 break;
         }

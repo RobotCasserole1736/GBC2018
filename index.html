@@ -54,18 +54,41 @@
             <!-- ------------------------------ -->
             <!-- -------Robot Observations----- -->
             <!-- ------------------------------ -->
-            
-            <h1>Match State</h1>
-            <button id="StartAuto" onclick="proccess_Period('StartSuto');">Start Auto </button>
-            <button id="StartTele" onclick="proccess_Period('StartTeleop');">Start Teleop</button>
-            <button id="EndMatch" onclick="proccess_Period('EndMatch');">End of Match</button>
-            <h1>Robot Actions </h1>
-            <button id="PickedUpCube" onclick="proccess_Event('PickedUpCube');">Picked Up Cube</button>
-            <button id="PlacedOnScale" onclick="proccess_Event('PlacedOnScale');">Placed On Scale</button>
-            <button id="PlacedOnSwitch" onclick="proccess_Event('PlacedOnSwitch');">Placed On Switch</button>
-            <button id="PlacedOnOpSwitch" onclick="proccess_Event('PlacedOnOpSwitch');">Placed On Opponent Switch</button>
-            <button id="PlacedInExchange" onclick="proccess_Event('PlacedInExchange');">Placed In Exchange</button>
-
+            <table>
+                <td>
+                    <h2>Match State</h2>
+                    <button id="StartAuto" onclick="proccess_Period('StartAuto');">Start Auto </button><br>
+                    <button id="StartTele" onclick="proccess_Period('StartTeleop');">Start Teleop</button><br>
+                    <button id="EndMatch" onclick="proccess_Period('EndMatch');">End of Match</button><br>
+                </td>
+                
+                <td>
+                    <h2>Robot Actions </h2>
+                    <button id="CrossBaseline" onclick="proccess_Event('CrossBaseline');">Crossed Baseline</button><br>
+                    <button id="PickedUpCube" onclick="proccess_Event('PickedUpCube');">Picked Up Cube</button><br>
+                    <button id="DroppedCube" onclick="proccess_Event('DroppedCube');">Dropped Cube</button><br>
+                    <button id="PlacedOnScale" onclick="proccess_Event('PlacedOnScale');">Placed On Scale</button><br>
+                    <button id="PlacedOnSwitch" onclick="proccess_Event('PlacedOnSwitch');">Placed On Switch</button><br>
+                    <button id="PlacedOnOpSwitch" onclick="proccess_Event('PlacedOnOpSwitch');">Placed On Opponent Switch</button><br>
+                    <button id="PlacedInExchange" onclick="proccess_Event('PlacedInExchange');">Placed In Exchange</button><br>
+                </td>
+                
+                <td>
+                    <h2>Penalties</h2>
+                    <button onclick="Penalty('penalty');">Penalty</button>
+                    <button onclick="Penalty('technical');">Technical Foul</button>
+                    <br>
+                    <a>Auto Penalties :  </a><a id="penalty_display1">0</a>
+                    <br>
+                    <a>Auto Technical Fouls :  </a><a id="technical_display1">0</a>
+                    <br>
+                    <a>Tele Penalties :  </a><a id="penalty_display2">0</a>
+                    <br>
+                    <a>Tele Technical Fouls :  </a><a id="technical_display2">0</a>
+                    <br>
+                    <button onclick="Undo_Penalty();">Undo Penalty</button>
+                </td>
+            </table>
             
         </div>
         
@@ -96,14 +119,7 @@
                		</tr>
                 </table>
                 
-                <button onclick="Penalty('penalty','end');">Penalty</button>
-                <button onclick="Penalty('technical','end');">Technical Foul</button>
-                <br>
-                <a>Penalties :  </a><a id="penalty_display3">0</a>
-                <br>
-                <a>Technical Fouls :  </a><a id="technical_display3">0</a>
-                <br>
-                <button onclick="Undo_Penalty();">Undo Penalty</button>
+
             </div>
             
             <div id="EndSliders">
@@ -113,6 +129,7 @@
                    <input class="bar" type="range" id ="climb_speed" name="climb_speed" min="0" max="20" value ="0" onchange="update_data();">
                    <span class="highlight"></span>
                </div>
+               
             </div>
             
         </div>
@@ -122,12 +139,35 @@
             <!-- ----------Post Match--------- -->
             <!-- ----------------------------- -->
             <br>
+            
             <a>Overall Rating :  </a>
             <a id="post_overallrating">Do Not Pick</a>
             <div id="shortslider">
                 <input class="bar" type="range" id ="Overall_Rating" name="Overall_Rating" min="0" max="3" value ="0" onchange="update_data();">
                 <span class="highlight"></span>
             </div>
+            
+            <a>How's My Driving? :  </a>
+            <a id="tele_driving_display">Little or No Movement</a>
+            <div id="shortslider">
+                <input class="bar" type="range" id ="driving_ability" name="driving_ability" min="0" max="3" value ="0" onchange="update_data();">
+                <span class="highlight"></span>
+            </div>
+            
+            <a>On-Robot Defense Effectiveness :  </a>
+            <a id="tele_robot_block_display">Awful / None</a>
+            <div id="shortslider">
+                <input class="bar" type="range" id ="robot_block" name="robot_block" min="0" max="3" value ="0" onchange="update_data();">
+                <span class="highlight"></span>
+            </div>
+            
+            <a>On-Robot Defense Time    :  </a>
+            <a id="tele_robot_block_time_display">0</a> seconds
+            <div id="slider">
+                <input class="bar" type="range" id ="robot_block_time" name="robot_block_time" min="0" max="120" value ="0" onchange="update_data();">
+                <span class="highlight"></span>
+            </div>
+            
             <textarea placeholder="Comments" id="Comments"></textarea>
             <br>
             <button id="SubmitReport" onclick="Submit_Report();">Submit Report</button>
