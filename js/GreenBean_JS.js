@@ -42,7 +42,7 @@ var tele_driving = 0;
 var tele_robot_block = 0;
 var tele_robot_block_time = 0;
 
-
+let timerID = setInterval(update_timer_display, 100);
 
 
 /* end game */
@@ -254,14 +254,36 @@ function getEventsString(){
     return outputStr;
 }
 
+function update_match_state(){
+    if(match_period == 'none'){
+        document.getElementById("MatchState").innerHTML = "Match State: Not Running";
+    } else if (match_period == 'tele'){
+        document.getElementById("MatchState").innerHTML = "Match State: Teleop";
+    } else if (match_period == 'auto') {
+        document.getElementById("MatchState").innerHTML = "Match State: Auto";
+    }
+}
+
+function update_timer_display(){
+    if(match_period == 'none'){
+        document.getElementById("TimeDisp").innerHTML = "Time = 0.0";
+    } else if (match_period == 'tele'){
+        tele_elapsed_time = Date.now() - tele_start_time;
+        document.getElementById("TimeDisp").innerHTML = "Time = " + tele_elapsed_time/1000.0;
+    } else if (match_period == 'auto') {
+        auto_elapsed_time = Date.now() - auto_start_time;
+        document.getElementById("TimeDisp").innerHTML = "Time = " + auto_elapsed_time/1000.0;
+    }
+}
+
 /* 
  * Updates the page displays
  */
 function disp_update()
 {
-    /* autonomous */
+    update_match_state();
+    
 
-    /* teleop */
 
     
     switch(tele_driving)
