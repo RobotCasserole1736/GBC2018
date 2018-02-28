@@ -13,8 +13,8 @@
 
 
 /* global variables */
-var elapsed_time
-var match_period
+var elapsed_time;
+var match_period;
 
 /* Penalty Variables */
 var penalty_auto = 0;
@@ -27,30 +27,19 @@ var technical_end = 0;
 var penalty_stack = new Array();
 
 /* autonomous */
-var auto_goals = new Array();
-auto_goals[0] = new goal_t(0,0,0,0,0);
-auto_goals[1] = new goal_t(0,0,0,0,0);
 
 var auto_score_stack = new Array();
+
 var auto_start_time;
 var auto_current_time;
 var auto_elapsed_time;
 
 /* teleoperated */
-var tele_goals = new Array();
-tele_goals[0] = new goal_t(0,0,0,0,0);
-tele_goals[1] = new goal_t(0,0,0,0,0);
-
 
 var tele_start_time;
 var tele_current_time;
 var tele_elapsed_time;
 
-var tele_front_court = 0;
-var tele_full_court = 0;
-var tele_corner = 0;
-var tele_human_loading = 0;    
-var tele_floor_loading = 0;
 
 var tele_driving = 0;
 var tele_robot_block = 0;
@@ -58,17 +47,12 @@ var tele_robot_block_time = 0;
 
 var tele_score_stack = new Array();
 
-var tele_crossings = [0,0,0,0,0,0,0,0,0];
-var tele_cross_stack = new Array();
 
 
 /* end game */
 var end_climb_speed = 0;
 
 var unsubmittedData = new Array();
-var end_start_time;
-var end_current_time;
-var end_elapsed_time;
 
 /******************************************************************************
  * Internal Functions
@@ -85,19 +69,14 @@ function update_data()
 
     
     /* teleop data */
-        tele_front_court = document.frm_shooting_location.shooting_location[0];
-        tele_full_court = document.frm_shooting_location.shooting_location[1];
-        tele_corner = document.frm_shooting_location.shooting_location[2];
         
-        tele_driving = document.getElementById('driving_ability').value;
-        tele_robot_block = document.getElementById('robot_block').value;
-        tele_robot_block_time = document.getElementById('robot_block_time').value;
+    tele_driving = document.getElementById('driving_ability').value;
+    tele_robot_block = document.getElementById('robot_block').value;
+    tele_robot_block_time = document.getElementById('robot_block_time').value;
+        
         
     /* end data */
-        end_climb_speed = document.getElementById('climb_speed').value;
-        
-    /* update points */
-    update_points();
+    end_climb_speed = document.getElementById('climb_speed').value;
 
     
     /* update display */
@@ -107,21 +86,22 @@ function update_data()
 function proccess_Period(type){
 	switch(type){
 		case 'StartAuto':
-		console.log('clickUno');
+		console.log('Start Of Auto');
 		auto_start_time = Date.now();
-		match_period = 'auto'
+		match_period = 'auto';
 		break;
 	
 		case 'StartTeleop':
-		console.log('clickDos');
+		console.log('Start of Teleop');
 		tele_start_time = Date.now();
-		match_period = 'tele'
+		match_period = 'tele';
 		break;
 
 		case 'EndMatch':
-		console.log('clickTres');
-		end_start_time = Date.now();
-		match_period = 'end';
+		console.log('End of Match');
+        match_end_time = Date.now() - tele_start_time;
+		console.log(match_end_time);
+        match_period = 'none';
 		break;
 	}
 	
@@ -130,96 +110,88 @@ function proccess_Period(type){
 function proccess_Event(type){
 	switch (type){
 		case 'PickedUpCube':
-
-            if(match_period === 'auto') {
+            console.log('Processing Cube Picked Up');
+            if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
-            } else if (match_period === 'tele') {
+            } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
-            } else {
-                end_current_time = Date.now();
-                end_elapsed_time = end_current_time - end_start_time;
-                console.log(end_elapsed_time);
+            } 
+		
+		break;
+        
+		case 'DroppedCube':
+            console.log('Processing Cube Dropped');
+            if(match_period == 'auto') {
+                auto_current_time = Date.now();
+                auto_elapsed_time = auto_current_time - auto_start_time;
+                console.log(auto_elapsed_time);
+            } else if (match_period == 'tele') {
+                tele_current_time = Date.now();
+                tele_elapsed_time = tele_current_time - tele_start_time;
+                console.log(tele_elapsed_time);
             } 
 		
 		break;
 	
 		case 'PlacedOnScale':
-            console.log('click2');
+            console.log('Processing Cube Placed On Scale');
 
-            if(match_period === 'auto') {
+            if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
-            } else if (match_period === 'tele') {
+            } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
-            } else {
-                end_current_time = Date.now();
-                end_elapsed_time = end_current_time - end_start_time;
-                console.log(end_elapsed_time);
-            } 		
+            }	
 		
-		
-
 		break;
 		
 		case 'PlacedOnSwitch':
-            console.log('click3');
+            console.log('Processing Cube Placed On Switch');
 
-            if(match_period === 'auto') {
+            if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
-            } else if (match_period === 'tele') {
+            } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
-            } else {
-                end_current_time = Date.now();
-                end_elapsed_time = end_current_time - end_start_time;
-                console.log(end_elapsed_time);
-            } 
+            }
 		break;
 		
         case 'PlacedOnOpSwitch':
-            console.log('click4');
-            if(match_period === 'auto') {
+            console.log('Processing Cube Placed On Opponents Switch');
+            if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
-            } else if (match_period === 'tele') {
+            } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
-            } else {
-                end_current_time = Date.now();
-                end_elapsed_time = end_current_time - end_start_time;
-                console.log(end_elapsed_time);
             } 
 
 		break;
 		
 		case 'PlacedInExchange':
-            console.log('click5');
+            console.log('Processing Cube Placed In Exchange');
 
-            if(match_period === 'auto') {
+            if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
-            } else if (match_period === 'tele') {
+            } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
-            } else {
-                end_current_time = Date.now();
-                end_elapsed_time = end_current_time - end_start_time;
-                console.log(end_elapsed_time);
-            } 					
+            } 				
 
 		break;
 	}
@@ -230,15 +202,9 @@ function proccess_Event(type){
 function disp_update()
 {
     /* autonomous */
-    document.getElementById("auto_pts_display").innerHTML = auto_goals[0].points;   /* points made in auton */
-    document.getElementById("auto_miss_display").innerHTML = auto_goals[1].points;  /* points missed in auton */
-    
+
     /* teleop */
-    document.getElementById("tele_high_pts_display").innerHTML = tele_goals[0].high_points;   /* high points made in teleop */
-    document.getElementById("tele_high_miss_display").innerHTML = tele_goals[1].high_points;  /* high points missed in teleop */
-    document.getElementById("tele_low_pts_display").innerHTML = tele_goals[0].low_points;   /* low points made in teleop */
-    document.getElementById("tele_low_miss_display").innerHTML = tele_goals[1].low_points;  /* low points missed in teleop */
-    
+
     
     switch(tele_driving)
     {
@@ -272,16 +238,6 @@ function disp_update()
             document.getElementById("tele_robot_block_display").innerHTML = "It's Super Effective!";
             break;
     }
-
-    document.getElementById("cullCounter").innerHTML = tele_crossings[0];
-    document.getElementById("drawbridgeCounter").innerHTML = tele_crossings[1];
-    document.getElementById("frisCounter").innerHTML = tele_crossings[2];
-    document.getElementById("moatCounter").innerHTML = tele_crossings[3];
-    document.getElementById("rampCounter").innerHTML = tele_crossings[4];
-    document.getElementById("rockCounter").innerHTML = tele_crossings[5];
-    document.getElementById("sallyCounter").innerHTML = tele_crossings[6];
-    document.getElementById("terrainCounter").innerHTML = tele_crossings[7];
-    document.getElementById("lowbarCounter").innerHTML = tele_crossings[8];
         
     /* end */
     document.getElementById("end_climb_speed_display").innerHTML = end_climb_speed;
@@ -344,44 +300,11 @@ function keyPressHandler(event) {
     }
 }
 
-/*
- * Updates the points values
- */
-function update_points()
-{
-    /* update the autonomous point total */
-    sum_points(auto_goals[0]);
-    sum_points(auto_goals[1]);
-    /* update the teleop point total */
-    sum_points(tele_goals[0]);
-    sum_points(tele_goals[1]);
-}
+
+
 
 /* 
- * summation of points
- */
-function sum_points(var_config)
-{
-    /* sum disk points */
-    var_config.points = 5 * var_config.high +
-                        2 * var_config.low;
-
-    var_config.high_points = 5 * var_config.high;
-    var_config.low_points = 2 * var_config.low;
-                
-    /* double points in auton */
-    if (var_config === auto_goals[0] || var_config === auto_goals[1] )
-            var_config.points = 2 * var_config.points;
-}
-
-// Replaced new_disk_score so that an undo score function could be easily added
-function new_disk_score(period, status, goal)
-{
-    score_change(period, status, goal, 1);
-}
-
-/* 
- * new_disk_score
+ * score_change
  */
 function score_change(period, status, goal, change)
 {
@@ -463,43 +386,6 @@ function new_penalty(type, period)
     penalty_stack.push([type,period]);
 }
 
-/*
- * Crossing a defense in Teleop
- */
-function new_defense_cross(type)
-{
-    tele_cross_stack.push(type);
-    switch(type)
-    {
-        case 'cull':
-            tele_crossings[0]++;
-            break;
-        case 'drawbridge':
-            tele_crossings[1]++;
-            break;
-        case 'fris':
-            tele_crossings[2]++;
-            break;
-        case 'moat':
-            tele_crossings[3]++;
-            break;
-        case 'ramp':
-            tele_crossings[4]++;
-            break;
-        case 'rock':
-            tele_crossings[5]++;
-            break;
-        case 'sally':
-            tele_crossings[6]++;
-            break;
-        case 'terrain':
-            tele_crossings[7]++;
-            break;
-        case 'lowbar':
-            tele_crossings[8]++;
-            break;
-    }
-}
 
 function save_data()
 {
@@ -580,45 +466,21 @@ function reset_form()
     document.getElementById("team_number_in").value = "";
     document.getElementById("match_number_in").value++;
     
-    document.getElementById("spy").checked = false;
-    document.getElementById("DroveToDefense").checked = false;
+
     auto_score_stack = new Array();
-    auto_goals[0] = new goal_t(0,0,0,0,0);
-    auto_goals[1] = new goal_t(0,0,0,0,0);
-    var e = document.getElementById("AutoDefenseCrossed");
-    e.value = "None"
+
     
     tele_score_stack = new Array();
-    document.getElementById("Front_shoot").checked = false;
-    document.getElementById("Full_shoot").checked = false;
-    document.getElementById("Corner_shoot").checked = false;
-    tele_goals[0] = new goal_t(0,0,0,0,0);
-    tele_goals[1] = new goal_t(0,0,0,0,0);
-    tele_front_court = 0;
-    tele_full_court = 0;
-    tele_corner = 0;
-    tele_human_loading = 0;    
-    tele_driving = 0;
+
+
     tele_robot_block = 0;
     tele_robot_block_time = 0;
-    tele_crossings = [0,0,0,0,0,0,0,0,0];
-    tele_cross_stack = new Array();
-    document.getElementById("stuck_cull").checked = false;
-    document.getElementById("stuck_drawbridge").checked = false;
-    document.getElementById("stuck_fris").checked = false;
-    document.getElementById("stuck_moat").checked = false;
-    document.getElementById("stuck_ramp").checked = false;
-    document.getElementById("stuck_rock").checked = false;
-    document.getElementById("stuck_sally").checked = false;
-    document.getElementById("stuck_terrain").checked = false;
-    document.getElementById("stuck_lowbar").checked = false;
+
+
     document.getElementById("driving_ability").value = 0;
     document.getElementById("robot_block").value = 0;
     document.getElementById("robot_block_time").value = 0;
-    document.getElementById("capture_attempt").checked = false;
-    document.getElementById("capture_success").checked = false;
-    document.getElementById("scale_attempt").checked = false;
-    document.getElementById("scale_success").checked = false;
+
     end_climb_speed = 0;
     document.getElementById("climb_speed").value = 0;
     
@@ -648,18 +510,6 @@ function reset_form()
     new_defense_cross(type);
     update_data();
  }
-
-/*
- * Disk scored.
- */
-function Disk_Score(period, status, goal)
-{
-    /* a disk is scored */
-    new_disk_score(period, status, goal);
-    
-    /* update point totals */
-    update_data();                 
-}
 
 /*
  * Robot Climbed.
@@ -743,46 +593,6 @@ function Undo_Penalty()
                 case 'technical':
                     technical_end--; break;
                 }
-                break;
-        }
-    }
-    update_data();
-}
-
-//Undo defense crossing
-function undo_defense_cross()
-{
-    if(tele_cross_stack.length > 0)
-    {
-        var type = tele_cross_stack.pop();
-        switch(type)
-        {
-            case 'cull':
-                tele_crossings[0]--;
-                break;
-            case 'drawbridge':
-                tele_crossings[1]--;
-                break;
-            case 'fris':
-                tele_crossings[2]--;
-                break;
-            case 'moat':
-                tele_crossings[3]--;
-                break;
-            case 'ramp':
-                tele_crossings[4]--;
-                break;
-            case 'rock':
-                tele_crossings[5]--;
-                break;
-            case 'sally':
-                tele_crossings[6]--;
-                break;
-            case 'terrain':
-                tele_crossings[7]--;
-                break;
-            case 'lowbar':
-                tele_crossings[8]--;
                 break;
         }
     }
