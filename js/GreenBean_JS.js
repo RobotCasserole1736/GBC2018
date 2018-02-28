@@ -22,11 +22,10 @@ var technical_auto = 0;
 var penalty_tele = 0;
 var technical_tele = 0;
 
+var event_stack = new Array();
 var penalty_stack = new Array();
 
 /* autonomous */
-
-var auto_score_stack = new Array();
 
 var auto_start_time;
 var auto_current_time;
@@ -43,7 +42,6 @@ var tele_driving = 0;
 var tele_robot_block = 0;
 var tele_robot_block_time = 0;
 
-var tele_score_stack = new Array();
 
 
 
@@ -108,6 +106,7 @@ function proccess_Period(type){
 }
 
 function proccess_Event(type){
+    var time = -1;
 	switch (type){
         case 'CrossBaseline':
             console.log('Processing Baseline Cross');
@@ -115,6 +114,7 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             }
 		
 		break;
@@ -125,10 +125,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             } 
 		
 		break;
@@ -139,10 +141,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             } 
 		
 		break;
@@ -154,10 +158,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             }	
 		
 		break;
@@ -169,10 +175,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             }
 		break;
 		
@@ -182,10 +190,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             } 
 
 		break;
@@ -197,10 +207,12 @@ function proccess_Event(type){
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
+                time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
+                time = tele_elapsed_time;
             } 				
 
 		break;
@@ -210,8 +222,28 @@ function proccess_Event(type){
         break;
 	}
     
+    if(time >= 0){
+        event_stack.push([match_period, type, time/1000.0]);
+        console.log(getEventsString());
+    }
+
     disp_update();
 }
+
+function getEventsString(){
+    outputStr = "";
+    
+    outputStr += "{";
+    event_stack.forEach(function(item,index,array){
+        outputStr += "(";
+        outputStr += item;
+        outputStr += "),";
+    });
+    
+    outputStr += "}";
+    return outputStr;
+}
+
 /* 
  * Updates the page displays
  */
@@ -315,47 +347,6 @@ function keyPressHandler(event) {
 }
 
 
-
-
-/* 
- * score_change
- */
-function score_change(period, status, goal, change)
-{
-    var status_l;
-    
-    switch(status)
-    {
-    case 'make':
-        status_l = 0; break;
-			
-    case 'miss':
-        status_l = 1; break;
-		
-    }
-            
-    /* autonomous */
-    if ( period === 'autonomous')
-    {
-        if(change > 0)
-            auto_score_stack.push([status, goal]);
-        auto_goals[status_l][goal]=auto_goals[status_l][goal]+change;
-	
-		/////
-    }
-    
-    /* teleoperated */
-    if ( period === 'teleop')
-    {
-        if(change > 0)
-            tele_score_stack.push([status, goal]);
-        tele_goals[status_l][goal]=tele_goals[status_l][goal]+change;
-		
-		
-    }
-
-}            
-
 /*
  * Asses a penalty
  */
@@ -398,56 +389,17 @@ function save_data()
     matchData += document.getElementById("team_number_in").value + ",";
     matchData += document.getElementById("match_number_in").value + ",";
     matchData += document.getElementById("match_type").value + ",";
-    matchData += (document.getElementById("spy").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("DroveToDefense").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("auto_pts_display").innerHTML + ",";
-    matchData += document.getElementById("auto_miss_display").innerHTML + ",";
-	matchData += document.getElementById("auto_elapsed_time") + ",";
-	matchData += document.getElementById("tele_elapsed_time") + ",";
-	matchData += document.getElementById("end_elapsed_time") + ",";
 	
-    var e = document.getElementById("AutoDefenseCrossed");
-    matchData += e.options[e.selectedIndex].text + ",";
-    matchData += (document.getElementById("Front_shoot").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("Full_shoot").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("Corner_shoot").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("tele_high_pts_display").innerHTML + ",";
-    matchData += document.getElementById("tele_high_miss_display").innerHTML + ",";
-    matchData += document.getElementById("tele_low_pts_display").innerHTML + ",";
-    matchData += document.getElementById("tele_low_miss_display").innerHTML + ",";
+
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
     matchData += tele_robot_block_time + ",";
-    matchData += document.getElementById("cullCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_cull").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("drawbridgeCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_drawbridge").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("frisCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_fris").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("moatCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_moat").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("rampCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_ramp").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("rockCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_rock").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("sallyCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_sally").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("terrainCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_terrain").checked ? "T" : "F") + ",";
-    matchData += document.getElementById("lowbarCounter").innerHTML + ",";
-    matchData += (document.getElementById("stuck_lowbar").checked ? "T" : "F") + ",";
-    
-    matchData += (document.getElementById("capture_attempt").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("capture_success").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("scale_attempt").checked ? "T" : "F") + ",";
-    matchData += (document.getElementById("scale_success").checked ? "T" : "F") + ",";
+
     matchData += end_climb_speed + ",";
     matchData += penalty_auto + ",";
     matchData += technical_auto + ",";
     matchData += penalty_tele + ",";
     matchData += technical_tele + ",";
-    matchData += penalty_end + ",";
-    matchData += technical_end + ",";
     matchData += overallrating = document.getElementById("Overall_Rating").value + ",";   
     var comments = document.getElementById("Comments").value;
     comments = comments.replace(/,/g,"_"); //Get rid of commas so we don't mess up CSV
@@ -472,10 +424,7 @@ function reset_form()
     document.getElementById("match_number_in").value++;
     
 
-    auto_score_stack = new Array();
-
-    
-    tele_score_stack = new Array();
+    event_stack = new Array();
 
 
     tele_robot_block = 0;
@@ -508,23 +457,9 @@ function reset_form()
  * 
  */
 
- function Defense_Cross(type)
- {
-    new_defense_cross(type);
-    update_data();
- }
-
 /*
  * Robot Climbed.
  */
-function Robot_Climb()
-{
-    /* a robot climbs */
-    //new_robot_climb(period, speed, height);
-    
-    /* update point totals */
-    update_data();                 
-}
             
 /*
  * Penalty comitted
@@ -537,26 +472,15 @@ function Penalty(type,period)
     update_data();
 }
 
+//Undo an event
+function Undo_Event(){
+    event_stack.pop();
+    update_data();
+}
+
 //Undo a score if possible
 function Undo_Score(period)
 {
-    switch(period)
-    {
-        case 'autonomous':
-            if(auto_score_stack.length > 0)
-            {
-                var scoreData = auto_score_stack.pop();
-                score_change(period, scoreData[0], scoreData[1], -1);
-            }
-            break;
-        case 'teleop':
-            if(tele_score_stack.length > 0)
-            {
-                var scoreData = tele_score_stack.pop();
-                score_change(period, scoreData[0], scoreData[1], -1);
-            }
-            break;
-    }
     update_data();
 }
 
