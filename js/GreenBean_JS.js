@@ -13,6 +13,8 @@
 
 
 /* global variables */
+var elapsed_time
+var match_period
 
 /* Penalty Variables */
 var penalty_auto = 0;
@@ -30,11 +32,19 @@ auto_goals[0] = new goal_t(0,0,0,0,0);
 auto_goals[1] = new goal_t(0,0,0,0,0);
 
 var auto_score_stack = new Array();
+var auto_start_time;
+var auto_current_time;
+var auto_elapsed_time;
 
 /* teleoperated */
 var tele_goals = new Array();
 tele_goals[0] = new goal_t(0,0,0,0,0);
 tele_goals[1] = new goal_t(0,0,0,0,0);
+
+
+var tele_start_time;
+var tele_current_time;
+var tele_elapsed_time;
 
 var tele_front_court = 0;
 var tele_full_court = 0;
@@ -51,10 +61,14 @@ var tele_score_stack = new Array();
 var tele_crossings = [0,0,0,0,0,0,0,0,0];
 var tele_cross_stack = new Array();
 
+
 /* end game */
 var end_climb_speed = 0;
 
 var unsubmittedData = new Array();
+var end_start_time;
+var end_current_time;
+var end_elapsed_time;
 
 /******************************************************************************
  * Internal Functions
@@ -82,14 +96,126 @@ function update_data()
     /* end data */
         end_climb_speed = document.getElementById('climb_speed').value;
         
-    /* updatae points */
+    /* update points */
     update_points();
 
     
     /* update display */
     disp_update();
 }
+function proccess_Period(type){
+	switch(type){
+		case 'StartAuto':
+		console.log('clickUno');
+		auto_start_time = Date.now();
+		match_period = 'auto'
+		break;
+	
+		case 'StartTeleop':
+		console.log('clickDos');
+		tele_start_time = Date.now();
+		match_period = 'tele'
+		break;
 
+		case 'EndMatch':
+		console.log('clickTres');
+		end_start_time = Date.now();
+		match_period = 'end';
+		break;
+	}
+	
+}
+function proccess_Event(type){
+	switch (type){
+		case 'PickedUpCube':
+		if(match_period === 'auto') {
+			auto_current_time = Date.now();
+			auto_elapsed_time = auto_current_time - auto_start_time;
+			console.log(auto_elapsed_time);
+		} else if (match_period === 'tele') {
+			tele_current_time = Date.now();
+			tele_elapsed_time = tele_current_time - tele_start_time;
+			console.log(tele_elapsed_time);
+		} else {
+			end_current_time = Date.now();
+			end_elapsed_time = end_current_time - end_start_time;
+			console.log(end_elapsed_time);
+		} 
+		
+		
+		break;
+	
+		case 'PlacedOnScale':
+		console.log('click2');
+		if(match_period === 'auto') {
+			auto_current_time = Date.now();
+			auto_elapsed_time = auto_current_time - auto_start_time;
+			console.log(auto_elapsed_time);
+		} else if (match_period === 'tele') {
+			tele_current_time = Date.now();
+			tele_elapsed_time = tele_current_time - tele_start_time;
+			console.log(tele_elapsed_time);
+		} else {
+			end_current_time = Date.now();
+			end_elapsed_time = end_current_time - end_start_time;
+			console.log(end_elapsed_time);
+		} 		
+		
+		
+		break;
+		
+		case 'PlacedOnSwitch':
+		console.log('click3');
+				if(match_period === 'auto') {
+			auto_current_time = Date.now();
+			auto_elapsed_time = auto_current_time - auto_start_time;
+			console.log(auto_elapsed_time);
+		} else if (match_period === 'tele') {
+			tele_current_time = Date.now();
+			tele_elapsed_time = tele_current_time - tele_start_time;
+			console.log(tele_elapsed_time);
+		} else {
+			end_current_time = Date.now();
+			end_elapsed_time = end_current_time - end_start_time;
+			console.log(end_elapsed_time);
+		} 
+		break;
+		
+		// case 'PlacedOnOpSwitch':
+		console.log('click4');
+		if(match_period === 'auto') {
+			auto_current_time = Date.now();
+			auto_elapsed_time = auto_current_time - auto_start_time;
+			console.log(auto_elapsed_time);
+		} else if (match_period === 'tele') {
+			tele_current_time = Date.now();
+			tele_elapsed_time = tele_current_time - tele_start_time;
+			console.log(tele_elapsed_time);
+		} else {
+			end_current_time = Date.now();
+			end_elapsed_time = end_current_time - end_start_time;
+			console.log(end_elapsed_time);
+		} 
+		break;
+		
+		case 'PlacedInExchange':
+		console.log('click5');
+		if(match_period === 'auto') {
+			auto_current_time = Date.now();
+			auto_elapsed_time = auto_current_time - auto_start_time;
+			console.log(auto_elapsed_time);
+		} else if (match_period === 'tele') {
+			tele_current_time = Date.now();
+			tele_elapsed_time = tele_current_time - tele_start_time;
+			console.log(tele_elapsed_time);
+		} else {
+			end_current_time = Date.now();
+			end_elapsed_time = end_current_time - end_start_time;
+			console.log(end_elapsed_time);
+		} 					
+		break;
+	}
+}
 /* 
  * Updates the page displays
  */
@@ -225,8 +351,10 @@ function score_change(period, status, goal, change)
     {
     case 'make':
         status_l = 0; break;
+			
     case 'miss':
         status_l = 1; break;
+		
     }
             
     /* autonomous */
@@ -235,6 +363,8 @@ function score_change(period, status, goal, change)
         if(change > 0)
             auto_score_stack.push([status, goal]);
         auto_goals[status_l][goal]=auto_goals[status_l][goal]+change;
+	
+		/////
     }
     
     /* teleoperated */
@@ -243,6 +373,8 @@ function score_change(period, status, goal, change)
         if(change > 0)
             tele_score_stack.push([status, goal]);
         tele_goals[status_l][goal]=tele_goals[status_l][goal]+change;
+		
+		
     }
 
 }            
@@ -339,6 +471,10 @@ function save_data()
     matchData += (document.getElementById("DroveToDefense").checked ? "T" : "F") + ",";
     matchData += document.getElementById("auto_pts_display").innerHTML + ",";
     matchData += document.getElementById("auto_miss_display").innerHTML + ",";
+	matchData += document.getElementById("auto_elapsed_time") + ",";
+	matchData += document.getElementById("tele_elapsed_time") + ",";
+	matchData += document.getElementById("end_elapsed_time") + ",";
+	
     var e = document.getElementById("AutoDefenseCrossed");
     matchData += e.options[e.selectedIndex].text + ",";
     matchData += (document.getElementById("Front_shoot").checked ? "T" : "F") + ",";
