@@ -80,26 +80,36 @@ function update_data()
 }
 
 function proccess_Period(type){
+    var time = -1;
+    
 	switch(type){
 		case 'StartAuto':
 		console.log('Start Of Auto');
 		auto_start_time = Date.now();
 		match_period = 'auto';
+        time = 0;
 		break;
 	
 		case 'StartTeleop':
 		console.log('Start of Teleop');
 		tele_start_time = Date.now();
 		match_period = 'tele';
+        time = 0;
 		break;
 
 		case 'EndMatch':
 		console.log('End of Match');
         match_end_time = Date.now() - tele_start_time;
 		console.log(match_end_time);
+        time = match_end_time;
         match_period = 'none';
 		break;
 	}
+    
+    if(time >= 0){
+        event_stack.push([match_period, type, time/1000.0]);
+        console.log(getEventsString());
+    }
     
     disp_update();
 	
