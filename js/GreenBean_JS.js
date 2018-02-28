@@ -473,7 +473,9 @@ function reset_form()
     
 
     auto_score_stack = new Array();
-
+	document.getElementById("startingPositionRight").checked = false;
+	document.getElementById("startingPositionCenter").checked = false;
+	document.getElementById("startingPositionLeft").checked = false;
     
     tele_score_stack = new Array();
 
