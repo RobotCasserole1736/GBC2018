@@ -234,7 +234,6 @@ function proccess_Event(type){
     
     if(time >= 0){
         event_stack.push([match_period, type, time/1000.0]);
-        console.log(getEventsString());
     }
 
     disp_update();
@@ -428,15 +427,27 @@ function save_data()
     matchData += tele_robot_block_time + ",";
 
     matchData += end_climb_speed + ",";
+    matchData += document.getElementById("platform_only").checked + ",";
+    matchData += document.getElementById("bar_climb_attempt").checked + ",";
+    matchData += document.getElementById("bar_climb_success").checked + ",";
+    matchData += document.getElementById("lift_partner_attempt").checked + ",";
+    matchData += document.getElementById("lift_partner_success").checked + ",";
+    matchData += document.getElementById("lift_by_partner_attempt").checked + ",";
+    matchData += document.getElementById("lift_by_partner_success").checked + ",";
+    
     matchData += penalty_auto + ",";
     matchData += technical_auto + ",";
     matchData += penalty_tele + ",";
     matchData += technical_tele + ",";
-    matchData += overallrating = document.getElementById("Overall_Rating").value + ",";   
+    matchData += document.getElementById("died_in_match").checked + ",";
+    
+    matchData += overallrating = document.getElementById("Overall_Rating").value + ",";     
     var comments = document.getElementById("Comments").value;
     comments = comments.replace(/,/g,"_"); //Get rid of commas so we don't mess up CSV
     comments = comments.replace("\n","   ");
-    matchData += comments + "\n";
+    matchData += comments + ",";
+    matchData += getEventsString() + "\n";
+    
     var existingData = localStorage.getItem("MatchData");
     if(existingData == null)
         localStorage.setItem("MatchData",matchData);

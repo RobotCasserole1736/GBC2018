@@ -63,7 +63,8 @@
 					<form action="">
 						<input type="radio" name="Start Position" value="startingPositionRight"> Right<br>
 						<input type="radio" name="Start Position" value="startingPositionCenter"> Center<br>
-						<input type="radio" name="Start Position" value="startingPositionLeft"> Left
+						<input type="radio" name="Start Position" value="startingPositionLeft"> Left<br>
+                        <input type="radio" name="Start Position" value="startingPositionOffField"> Off Field<br>
                     </form>
 
 				<td>	
@@ -128,20 +129,33 @@
              
             <div id="EndButtons">
             	<table> 
+                    <tr>
+            			<td>
+                			<input type="checkbox" name="platform_only" id="platform_only">Platform Only <br>
+                		</td>
+                    </tr>
             		<tr>
             			<td>
-                			<input type="checkbox" name="Bar_Climb_Attempt" id="bar_climb_attempt">Bar Climb Attempt
+                			<input type="checkbox" name="bar_climb_attempt" id="bar_climb_attempt">Bar Climb Attempt
                 		</td>
                 		<td>
-                			 <input type="checkbox" name="Bar_Climb_Success" id="capture_success">Bar Climb Success<br>
+                			 <input type="checkbox" name="bar_climb_success" id="bar_climb_success">Bar Climb Success<br>
                 		</td>
                 	</tr>
                 	<tr>
                 		<td>	
-                			<input type="checkbox" name="Partner_Climb_Attempt" id="scale_attempt">Partner Climb Attempt 
+                			<input type="checkbox" name="lift_partner_attempt" id="lift_partner_attempt">Attempted to lift partner
                 		</td>
                 		<td>
-               			    <input type="checkbox" name="Partner_Climb_Success" id="scale_success">Partner Climb Success<br>
+               			    <input type="checkbox" name="lift_partner_success" id="lift_partner_success">Success lifting partner<br>
+               		    </td>
+               		</tr>
+                    <tr>
+                		<td>	
+                			<input type="checkbox" name="lift_by_partner_attempt" id="lift_by_partner_attempt">Partner attempted to lift
+                		</td>
+                		<td>
+               			    <input type="checkbox" name="lift_by_partner_success" id="lift_by_partner_success">Successfully lifted by partner<br>
                		    </td>
                		</tr>
                 </table>
@@ -166,6 +180,8 @@
             <!-- ----------Post Match--------- -->
             <!-- ----------------------------- -->
             <br>
+            
+            <input type="checkbox" name="died_in_match" id="died_in_match">Died During Match <br>
             
             <a>Overall Rating :  </a>
             <a id="post_overallrating">Do Not Pick</a>
