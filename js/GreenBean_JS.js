@@ -15,6 +15,14 @@
 /* global variables */
 var elapsed_time;
 var match_period;
+	/*counters*/
+var auto_cross_baseline_counter = 0;
+var pick_up_cube_counter = 0;
+var dropped_cube_counter = 0;
+var placed_switch_counter = 0;
+var placed_scale_counter = 0;
+var placed_on_opp_switch_counter = 0;
+var placed_in_exchange_counter = 0;
 
 /* Penalty Variables */
 var penalty_auto = 0;
@@ -119,6 +127,8 @@ function proccess_Event(type){
     var time = -1;
 	switch (type){
         case 'CrossBaseline':
+			auto_cross_baseline_counter++;
+			
             console.log('Processing Baseline Cross');
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
@@ -131,6 +141,8 @@ function proccess_Event(type){
         
 		case 'PickedUpCube':
             console.log('Processing Cube Picked Up');
+			pick_up_cube++;
+			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
@@ -147,6 +159,8 @@ function proccess_Event(type){
         
 		case 'DroppedCube':
             console.log('Processing Cube Dropped');
+			dropped_cube_counter++;
+			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
@@ -163,7 +177,8 @@ function proccess_Event(type){
 	
 		case 'PlacedOnScale':
             console.log('Processing Cube Placed On Scale');
-
+				placed_scale_counter++;
+				
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
@@ -180,7 +195,8 @@ function proccess_Event(type){
 		
 		case 'PlacedOnSwitch':
             console.log('Processing Cube Placed On Switch');
-
+			placed_switch_counter++;
+			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
@@ -195,6 +211,8 @@ function proccess_Event(type){
 		break;
 		
         case 'PlacedOnOpSwitch':
+		placed_on_opp_switch++;
+		
             console.log('Processing Cube Placed On Opponents Switch');
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
@@ -212,7 +230,8 @@ function proccess_Event(type){
 		
 		case 'PlacedInExchange':
             console.log('Processing Cube Placed In Exchange');
-
+			placed_in_exchange_counter++;
+			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
@@ -261,8 +280,11 @@ function update_match_state(){
         document.getElementById("MatchState").innerHTML = "Match State: Teleop";
     } else if (match_period == 'auto') {
         document.getElementById("MatchState").innerHTML = "Match State: Auto";
-    }
+    } 
+	
+	document.getElementById("RobotActions").innerHTML = "RobotActions: auto_cross_baseline_counter"
 }
+	
 
 function update_timer_display(){
     if(match_period == 'none'){
