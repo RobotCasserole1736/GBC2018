@@ -446,8 +446,15 @@ function new_penalty(type)
 
 function save_data()
 {
+    var teamnum = document.getElementById("team_number_in").value;
+    
+    //ensure we have a team number
+    while(teamnum < 1){
+        teamnum = prompt("Please enter the team number:", "0");
+    }
+    
     var matchData = document.getElementById("scout_name_in").value + ",";
-    matchData += document.getElementById("team_number_in").value + ",";
+    matchData += teamnum + ","
     matchData += document.getElementById("match_number_in").value + ",";
     matchData += document.getElementById("match_type").value + ",";
 	
