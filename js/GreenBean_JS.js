@@ -458,7 +458,8 @@ function save_data()
     matchData += document.getElementById("match_number_in").value + ",";
     matchData += document.getElementById("match_type").value + ",";
 	
-
+    matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
+    
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
     matchData += tele_robot_block_time + ",";
@@ -502,11 +503,6 @@ function reset_form()
 {
     document.getElementById("team_number_in").value = "";
     document.getElementById("match_number_in").value++;
-    
-
-	document.getElementById("startingPositionRight").checked = false;
-	document.getElementById("startingPositionCenter").checked = false;
-	document.getElementById("startingPositionLeft").checked = false;
     
     document.getElementById("platform_only").checked = false;
     document.getElementById("bar_climb_attempt").checked = false;
