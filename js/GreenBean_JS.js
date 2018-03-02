@@ -83,26 +83,16 @@ function proccess_Period(type){
     var time = -1;
     
 	switch(type){
-		case 'StartAuto':
-		console.log('Start Of Auto');
-		auto_start_time = Date.now();
-		match_period = 'auto';
-        time = 0;
+        case 'StartAuto':
+            start_auto();
 		break;
 	
 		case 'StartTeleop':
-		console.log('Start of Teleop');
-		tele_start_time = Date.now();
-		match_period = 'tele';
-        time = 0;
+            start_teleop();
 		break;
 
 		case 'EndMatch':
-		console.log('End of Match');
-        match_end_time = Date.now() - tele_start_time;
-		console.log(match_end_time);
-        time = match_end_time;
-        match_period = 'none';
+            end_match();
 		break;
 	}
     
@@ -112,7 +102,30 @@ function proccess_Period(type){
     }
     
     disp_update();
-	
+    
+
+}
+
+function start_auto(){
+    console.log('Start Of Auto');
+    auto_start_time = Date.now();
+    match_period = 'auto';
+    time = 0;
+}
+
+function start_teleop(){
+    console.log('Start of Teleop');
+    tele_start_time = Date.now();
+    match_period = 'tele';
+    time = 0;
+}
+
+function end_match(){
+    console.log('End of Match');
+    match_end_time = Date.now() - tele_start_time;
+    console.log(match_end_time);
+    time = match_end_time;
+    match_period = 'none';
 }
 
 function proccess_Event(type){
@@ -264,15 +277,26 @@ function update_match_state(){
 }
 
 function update_timer_display(){
+
+    //update timer display & handle state transitions
     if(match_period == 'none'){
         document.getElementById("TimeDisp").innerHTML = "Time = 0.0";
     } else if (match_period == 'tele'){
         tele_elapsed_time = Date.now() - tele_start_time;
         document.getElementById("TimeDisp").innerHTML = "Time = " + tele_elapsed_time/1000.0;
+        if(auto_elapsed_time >= 145000){ //teleop is 2min15sec plus a bit of extra
+            end_match();
+            disp_update();
+        }
     } else if (match_period == 'auto') {
         auto_elapsed_time = Date.now() - auto_start_time;
         document.getElementById("TimeDisp").innerHTML = "Time = " + auto_elapsed_time/1000.0;
+        if(auto_elapsed_time >= 18000){ //Auto is 15 seconds, plus a bit of leway just in case the pause between is bigger.
+            start_teleop();
+            disp_update();
+        }
     }
+
 }
 
 /* 
@@ -281,9 +305,6 @@ function update_timer_display(){
 function disp_update()
 {
     update_match_state();
-    
-
-
     
     switch(tele_driving)
     {
@@ -480,11 +501,15 @@ function reset_form()
 	document.getElementById("startingPositionCenter").checked = false;
 	document.getElementById("startingPositionLeft").checked = false;
     
+    document.getElementById("platform_only").checked = false;
+    document.getElementById("bar_climb_attempt").checked = false;
+    document.getElementById("bar_climb_success").checked = false;
+    document.getElementById("lift_partner_attempt").checked = false;
+    document.getElementById("lift_partner_success").checked = false;
+    document.getElementById("lift_by_partner_attempt").checked = false;
+    document.getElementById("lift_by_partner_success").checked = false;
     
-
     event_stack = new Array();
-
-
 
     tele_robot_block = 0;
     tele_robot_block_time = 0;
