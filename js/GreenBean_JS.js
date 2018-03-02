@@ -349,31 +349,34 @@ function disp_update()
  * Handles key presses
  */
 function keyPressHandler(event) {
-    var x = event.key;
-    console.log("The pressed key was: " + x);
-    if (x == " "){ 
-        proccess_Event('PickedUpCube');
-    }
-    if (x == "w"){ 
-        proccess_Event('PlacedOnSwitch');
-    }
-    if (x == "a"){ 
-        proccess_Event('PlacedOnScale');
-    }
-    if (x == "s"){ 
-        proccess_Event('PlacedOnOpSwitch');
-    }
-    if (x == "d"){ 
-        proccess_Event('PlacedInExchange');
-    }
-    if (x == "1"){ 
-        proccess_Period('StartAuto');
-    }
-    if (x == "2"){ 
-        proccess_Period('StartTeleop');
-    }
-    if (x == "3"){ 
-        proccess_Period('EndMatch');
+    if(document.getElementById("RobotObservations").style.display != "none"){
+        var x = event.key;
+        console.log("The pressed key was: " + x);
+        
+        if (x == " "){ 
+            proccess_Event('PickedUpCube');
+        }
+        if (x == "w"){ 
+            proccess_Event('PlacedOnSwitch');
+        }
+        if (x == "a"){ 
+            proccess_Event('PlacedOnScale');
+        }
+        if (x == "s"){ 
+            proccess_Event('PlacedOnOpSwitch');
+        }
+        if (x == "d"){ 
+            proccess_Event('PlacedInExchange');
+        }
+        if (x == "1"){ 
+            proccess_Period('StartAuto');
+        }
+        if (x == "2"){ 
+            proccess_Period('StartTeleop');
+        }
+        if (x == "3"){ 
+            proccess_Period('EndMatch');
+        }
     }
 }
 
