@@ -356,25 +356,31 @@ function keyPressHandler(event) {
         if (x == " "){ 
             proccess_Event('PickedUpCube');
         }
-        if (x == "w"){ 
+        else if (x == "w"){ 
             proccess_Event('PlacedOnSwitch');
         }
-        if (x == "a"){ 
+        else if (x == "a"){ 
             proccess_Event('PlacedOnScale');
         }
-        if (x == "s"){ 
+        else if (x == "s"){ 
             proccess_Event('PlacedOnOpSwitch');
         }
-        if (x == "d"){ 
+        else if (x == "d"){ 
             proccess_Event('PlacedInExchange');
         }
-        if (x == "1"){ 
+        else if (x == "f"){ 
+            proccess_Event('DroppedCube');
+        }
+        else if (x == "q"){ 
+            proccess_Event('CrossBaseline');
+        }
+        else if (x == "1"){ 
             proccess_Period('StartAuto');
         }
-        if (x == "2"){ 
+        else if (x == "2"){ 
             proccess_Period('StartTeleop');
         }
-        if (x == "3"){ 
+        else if (x == "3"){ 
             proccess_Period('EndMatch');
         }
     }
