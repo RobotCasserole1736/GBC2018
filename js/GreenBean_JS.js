@@ -514,11 +514,11 @@ function disp_update()
 
     
     /* Average time to place */
-    document.getElementById("attp_scale").innerHTML = time_to_place_scale_avg;
-    document.getElementById("attp_switch").innerHTML = time_to_place_switch_avg;
-    document.getElementById("attp_opSwitch").innerHTML = time_to_place_op_switch_avg;
-    document.getElementById("attp_exchange").innerHTML = time_to_place_exchange_avg;
-    document.getElementById("accum_cube_carry").innerHTML = cube_carry_time_accum;
+    document.getElementById("attp_scale").innerHTML = time_to_place_scale_avg.toFixed(3);
+    document.getElementById("attp_switch").innerHTML = time_to_place_switch_avg.toFixed(3);
+    document.getElementById("attp_opSwitch").innerHTML = time_to_place_op_switch_avg.toFixed(3);
+    document.getElementById("attp_exchange").innerHTML = time_to_place_exchange_avg.toFixed(3);
+    document.getElementById("accum_cube_carry").innerHTML = cube_carry_time_accum.toFixed(3);
     
     /* penalty */
     document.getElementById("penalty_display1").innerHTML = penalty_auto;
@@ -598,11 +598,11 @@ function save_data()
     matchData += placed_scale_counter + ",";
     matchData += placed_op_switch_counter + ",";
     matchData += placed_in_exchange_counter + ",";
-    matchData += time_to_place_scale_avg + ",";
-    matchData += time_to_place_switch_avg + ",";
-    matchData += time_to_place_op_switch_avg + ",";
-    matchData += time_to_place_exchange_avg + ",";
-    matchData += cube_carry_time_accum + ",";
+    matchData += time_to_place_scale_avg.toFixed(3) + ",";
+    matchData += time_to_place_switch_avg.toFixed(3) + ",";
+    matchData += time_to_place_op_switch_avg.toFixed(3) + ",";
+    matchData += time_to_place_exchange_avg.toFixed(3) + ",";
+    matchData += cube_carry_time_accum.toFixed(3) + ",";
 
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
@@ -658,15 +658,29 @@ function reset_form()
     document.getElementById("lift_by_partner_success").checked = false;
 
     event_stack = new Array();
+    
+    elapsed_time = 0.0;
+    match_period = 'none';
+    auto_cross_baseline_counter = 0;
+    pick_up_cube_counter = 0;
+    dropped_cube_counter = 0;
+    placed_switch_counter = 0;
+    placed_scale_counter = 0;
+    placed_op_switch_counter = 0;
+    placed_in_exchange_counter = 0;
+    time_to_place_scale_avg = 0;
+    time_to_place_switch_avg = 0;
+    time_to_place_op_switch_avg = 0;
+    time_to_place_exchange_avg = 0;
+    cube_carry_time_accum = 0;
 
     tele_robot_block = 0;
     tele_robot_block_time = 0;
 
-
     document.getElementById("driving_ability").value = 0;
     document.getElementById("robot_block").value = 0;
     document.getElementById("robot_block_time").value = 0;
-     document.getElementById("died_in_match").checked = false;
+    document.getElementById("died_in_match").checked = false;
     document.getElementById("no_show").checked = false;
 
     end_climb_speed = 0;
