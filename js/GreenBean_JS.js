@@ -370,6 +370,12 @@ function updateEventStats(){
             } else if(item[1] == 'DroppedCube') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 has_cube = false;
+            } else if(item[1] == 'StartTeleop') {
+                cube_carry_time_accum += (15 - cube_ack_time);
+                cube_ack_time = 0; //handle mode transition
+            } else if(item[1] == 'EndMatch') {
+                cube_carry_time_accum += (255 - cube_ack_time);
+                cube_ack_time = 0; //handle mode transition
             }
 
             //calc stdDevs   
