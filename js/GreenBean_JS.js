@@ -545,6 +545,7 @@ function save_data()
     matchData += penalty_tele + ",";
     matchData += technical_tele + ",";
     matchData += document.getElementById("died_in_match").checked + ",";
+    matchData += document.getElementById("no_show").checked + ",";
     
     matchData += overallrating = document.getElementById("Overall_Rating").value + ",";     
     var comments = document.getElementById("Comments").value;
@@ -578,7 +579,7 @@ function reset_form()
     document.getElementById("lift_partner_success").checked = false;
     document.getElementById("lift_by_partner_attempt").checked = false;
     document.getElementById("lift_by_partner_success").checked = false;
-    
+
     event_stack = new Array();
 
     tele_robot_block = 0;
@@ -588,6 +589,8 @@ function reset_form()
     document.getElementById("driving_ability").value = 0;
     document.getElementById("robot_block").value = 0;
     document.getElementById("robot_block_time").value = 0;
+     document.getElementById("died_in_match").checked = false;
+    document.getElementById("no_show").checked = false;
 
     end_climb_speed = 0;
     document.getElementById("climb_speed").value = 0;
