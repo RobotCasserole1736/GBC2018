@@ -137,6 +137,7 @@ function start_teleop(){
     tele_start_time = Date.now();
     match_period = 'tele';
     time = 0;
+	document.getElementById("Cross Baseline").disabled = false;
 }
 
 function end_match(){
@@ -172,6 +173,13 @@ function proccess_Event(type){
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
+				if(document.getElementById("PickedUpCube").disabled = false){
+					document.getElementById("DroppedCube").disabled = true;
+					document.getElementById("PlacedOnScale").disabled = true;
+					document.getElementById("PlacedOnSwitch").disabled = true;
+					document.getElementById("PlacedOnOpSwitch").disabled = true;
+					document.getElementById("PlacedInExchange").disabled = true;
+				}
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
