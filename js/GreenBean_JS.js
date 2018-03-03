@@ -127,10 +127,12 @@ function proccess_Event(type){
     var time = -1;
 	switch (type){
         case 'CrossBaseline':
-			auto_cross_baseline_counter++;
+			
 			
             console.log('Processing Baseline Cross');
             if(match_period == 'auto') {
+				auto_cross_baseline_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
@@ -141,14 +143,18 @@ function proccess_Event(type){
         
 		case 'PickedUpCube':
             console.log('Processing Cube Picked Up');
-			pick_up_cube++;
+			
 			
             if(match_period == 'auto') {
+				pick_up_cube_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				pick_up_cube_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
@@ -159,14 +165,18 @@ function proccess_Event(type){
         
 		case 'DroppedCube':
             console.log('Processing Cube Dropped');
-			dropped_cube_counter++;
+			
 			
             if(match_period == 'auto') {
+				dropped_cube_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				dropped_cube_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
@@ -177,14 +187,18 @@ function proccess_Event(type){
 	
 		case 'PlacedOnScale':
             console.log('Processing Cube Placed On Scale');
-				placed_scale_counter++;
+				
 				
             if(match_period == 'auto') {
+				placed_scale_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				placed_scale_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
@@ -195,14 +209,18 @@ function proccess_Event(type){
 		
 		case 'PlacedOnSwitch':
             console.log('Processing Cube Placed On Switch');
-			placed_switch_counter++;
+			
 			
             if(match_period == 'auto') {
+				placed_switch_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				placed_switch_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
@@ -211,15 +229,19 @@ function proccess_Event(type){
 		break;
 		
         case 'PlacedOnOpSwitch':
-		placed_on_opp_switch++;
+		
 		
             console.log('Processing Cube Placed On Opponents Switch');
             if(match_period == 'auto') {
+				
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				placed_on_opp_switch_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
@@ -230,18 +252,23 @@ function proccess_Event(type){
 		
 		case 'PlacedInExchange':
             console.log('Processing Cube Placed In Exchange');
-			placed_in_exchange_counter++;
+			
 			
             if(match_period == 'auto') {
+				placed_in_exchange_counter++;
+				
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
                 console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
+				placed_in_exchange_counter++;
+				
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
                 console.log(tele_elapsed_time);
                 time = tele_elapsed_time;
+				
             } 				
 
 		break;
@@ -282,7 +309,7 @@ function update_match_state(){
         document.getElementById("MatchState").innerHTML = "Match State: Auto";
     } 
 	
-	document.getElementById("RobotActions").innerHTML = "RobotActions: auto_cross_baseline_counter"
+		
 }
 	
 
@@ -303,7 +330,7 @@ function update_timer_display(){
  */
 function disp_update()
 {
-    update_match_state();
+    update_match_state()
     
 
 
@@ -366,7 +393,22 @@ function disp_update()
     document.getElementById("technical_display1").innerHTML = technical_auto;
     document.getElementById("penalty_display2").innerHTML = penalty_tele;
     document.getElementById("technical_display2").innerHTML = technical_tele;
-}
+	/*match event*/
+	
+	
+		document.getElementById("baseLineCounter").innerHTML = auto_cross_baseline_counter;
+		document.getElementById("pickedUpCubeCounter").innerHTML = pick_up_cube_counter;
+		document.getElementById("droppedCubeCounter").innerHTML = dropped_cube_counter;
+		document.getElementById("placedOnScaleCounter").innerHTML = placed_scale_counter;
+		document.getElementById("placedOnSwitchCounter").innerHTML = placed_switch_counter;
+		document.getElementById("placedOnOppSwitchCounter").innerHTML = placed_on_opp_switch_counter;
+		document.getElementById("placedInExchangeCounter").innerHTML = placed_in_exchange_counter;
+			
+	
+		
+	}
+	
+
 
 /*
  * Handles key presses

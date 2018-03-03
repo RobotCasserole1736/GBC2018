@@ -73,15 +73,15 @@
                     <button id="StartTele" onclick="proccess_Period('StartTeleop');">Start Teleop</button><br>
                     <button id="EndMatch" onclick="proccess_Period('EndMatch');">End of Match</button><br>
                 </td>
-                
+                 
                 <td>
                     <h2>Robot Actions </h2>
                     <button id="CrossBaseline" onclick="proccess_Event('CrossBaseline');">Crossed Baseline</button>
-                    <a> :  </a><a id="auto_cross_baseline_counter">0</a>
+                    <a> :  </a><a id="baseLineCounter">0</a>
                     <br>
                     <button id="PickedUpCube" onclick="proccess_Event('PickedUpCube');">Picked Up Cube</button>
                     <a> :  </a><a id="pickedUpCubeCounter">0</a>
-                    <br>
+                    <br> 
                     <button id="DroppedCube" onclick="proccess_Event('DroppedCube');">Dropped Cube</button>
 					<a> :  </a><a id="droppedCubeCounter">0</a>
                     <br>
@@ -89,13 +89,13 @@
 					<a> :  </a><a id="placedOnScaleCounter">0</a>
                     <br>
                     <button id="PlacedOnSwitch" onclick="proccess_Event('PlacedOnSwitch');">Placed On Switch</button>
-					<a> :  </a><a id="placedOnSwitchCOunter">0</a>
+					<a> :  </a><a id="placedOnSwitchCounter">0</a>
                     <br>
                     <button id="PlacedOnOpSwitch" onclick="proccess_Event('PlacedOnOpSwitch');">Placed On Opponent Switch</button>
-					<a> :  </a><a id="placedOnOpSwitch">0</a>
+					<a> :  </a><a id="placedOnOppSwitchCounter">0</a>
                     <br>
                     <button id="PlacedInExchange" onclick="proccess_Event('PlacedInExchange');">Placed In Exchange</button>
-					<a> :  </a><a id="placedOnExchange">0</a>
+					<a> :  </a><a id="placedInExchangeCounter">0</a>
                     <br>
                     <button onclick="Undo_Event();">Undo</button><br>
                 </td>
