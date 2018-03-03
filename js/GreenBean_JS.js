@@ -119,7 +119,7 @@ function proccess_Period(type){
     
     if(elapsed_time >= 0){
         event_stack.push([match_period, type, elapsed_time/1000.0]);
-        console.log(getEventsString());
+        
     }
     
     updateEventStats();
@@ -129,23 +129,22 @@ function proccess_Period(type){
 }
 
 function start_auto(){
-    console.log('Start Of Auto');
     auto_start_time = Date.now();
     match_period = 'auto';
     elapsed_time = 0;
 }
 
 function start_teleop(){
-    console.log('Start of Teleop');
+    
     tele_start_time = Date.now();
     match_period = 'tele';
     time = 0;
-	document.getElementById("Cross Baseline").disabled = false;
+	document.getElementById("Cross Baseline").disabled = true;
     elapsed_time = 0;
 }
 
 function end_match(){
-    console.log('End of Match');
+    
     match_end_time = Date.now() - tele_start_time;
     console.log(match_end_time);
     elapsed_time = match_end_time;
@@ -158,90 +157,81 @@ function proccess_Event(type){
         case 'CrossBaseline':
 			
 			
-            console.log('Processing Baseline Cross');
+    
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             }
 		
 		break;
         
 		case 'PickedUpCube':
-            console.log('Processing Cube Picked Up');
 			
 			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
+    
                 time = auto_elapsed_time;
-				if(document.getElementById("PickedUpCube").disabled = false){
-					document.getElementById("DroppedCube").disabled = true;
-					document.getElementById("PlacedOnScale").disabled = true;
-					document.getElementById("PlacedOnSwitch").disabled = true;
-					document.getElementById("PlacedOnOpSwitch").disabled = true;
-					document.getElementById("PlacedInExchange").disabled = true;
-				}
+				
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
             } 
 		
 		break;
         
 		case 'DroppedCube':
-            console.log('Processing Cube Dropped');
+    
 			
 			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
+    
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
             } 
 		
 		break;
 	
 		case 'PlacedOnScale':
-            console.log('Processing Cube Placed On Scale');
+    
 				
 				
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
+    
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
             }	
 		
 		break;
 		
 		case 'PlacedOnSwitch':
-            console.log('Processing Cube Placed On Switch');
+    
 			
 			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
             }
 		break;
@@ -249,34 +239,34 @@ function proccess_Event(type){
         case 'PlacedOnOpSwitch':
 		
 		
-            console.log('Processing Cube Placed On Opponents Switch');
+    
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
+    
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
             } 
 
 		break;
 		
 		case 'PlacedInExchange':
-            console.log('Processing Cube Placed In Exchange');
+    
 			
 			
             if(match_period == 'auto') {
                 auto_current_time = Date.now();
                 auto_elapsed_time = auto_current_time - auto_start_time;
-                console.log(auto_elapsed_time);
+    
                 time = auto_elapsed_time;
             } else if (match_period == 'tele') {
                 tele_current_time = Date.now();
                 tele_elapsed_time = tele_current_time - tele_start_time;
-                console.log(tele_elapsed_time);
+    
                 time = tele_elapsed_time;
 				
             } 				
@@ -284,7 +274,7 @@ function proccess_Event(type){
 		break;
         
         default:
-            console.log('developers did something wrong' );
+            
         break;
 	}
     
@@ -320,7 +310,7 @@ function update_match_state(){
 
 
 function updateEventStats(){
-    console.log("updating match stats");    
+        
     var has_cube = true; //Presume all robots start with cube. Even if they don't this is still an ok assumption
     var cube_ack_time = 0;
     var prev_period_cube_pos_time = 0;
@@ -342,7 +332,7 @@ function updateEventStats(){
     cube_carry_time_accum = 0;
     
     event_stack.forEach(function(item,index,array){
-        console.log(item);
+    
         
         //Count up events
         if(item[1] == 'CrossBaseline')
@@ -421,6 +411,17 @@ function updateEventStats(){
         cube_possessed = has_cube;
     }
     
+}
+
+function button_enabled/disabled(){
+	if(cube_possessed == false){
+		console.log('it works')
+		document.getElementById("DroppedCube").disabled = true;
+		document.getElementById("PlacedOnScale").disabled = true;
+		document.getElementById("PlacedOnSwitch").disabled = true;
+		document.getElementById("PlacedOnOpSwitch").disabled = true;
+		document.getElementById("PlacedInExchange").disabled = true;
+	}
 }
 	
 
@@ -585,8 +586,7 @@ function disp_update()
 function new_penalty(type)
 {
     var period = match_period;
-    console.log('got new penalty ' + type + ' ' + period);
-    switch(period)
+        switch(period)
     {
         case 'auto':
             switch(type)
