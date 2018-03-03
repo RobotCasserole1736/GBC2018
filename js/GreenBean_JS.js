@@ -286,6 +286,8 @@ function proccess_Event(type){
 
 //Simple csv of all events in stack
 function getEventsString(){
+    var outputStr = "";
+    
     event_stack.forEach(function(item,index,array){
         outputStr += item;
         outputStr += ",";
@@ -406,6 +408,50 @@ function update_timer_display(){
 
 }
 
+/*
+ * Handles key presses
+ */
+function keyPressHandler(event) {
+    if(document.getElementById("RobotObservations").style.display != "none"){
+        var x = event.key;
+        console.log("The pressed key was: " + x);
+        
+        if (x == " "){ 
+            proccess_Event('PickedUpCube');
+        }
+        else if (x == "w"){ 
+            proccess_Event('PlacedOnSwitch');
+        }
+        else if (x == "a"){ 
+            proccess_Event('PlacedOnScale');
+        }
+        else if (x == "s"){ 
+            proccess_Event('PlacedOnOpSwitch');
+        }
+        else if (x == "d"){ 
+            proccess_Event('PlacedInExchange');
+        }
+        else if (x == "f"){ 
+            proccess_Event('DroppedCube');
+        }
+        else if (x == "q"){ 
+            proccess_Event('CrossBaseline');
+        }
+        else if (x == "z"){
+            Undo_Event();
+        }
+        else if (x == "1"){ 
+            proccess_Period('StartAuto');
+        }
+        else if (x == "2"){ 
+            proccess_Period('StartTeleop');
+        }
+        else if (x == "3"){ 
+            proccess_Period('EndMatch');
+        }
+    }
+}
+
 /* 
  * Updates the page displays
  */
@@ -490,55 +536,8 @@ function disp_update()
     document.getElementById("placedInExchangeCounter").innerHTML = placed_in_exchange_counter;
 			
 	
-		
-	}
-	
-
-
-/*
- * Handles key presses
- */
-function keyPressHandler(event) {
-    if(document.getElementById("RobotObservations").style.display != "none"){
-        var x = event.key;
-        console.log("The pressed key was: " + x);
-        
-        if (x == " "){ 
-            proccess_Event('PickedUpCube');
-        }
-        else if (x == "w"){ 
-            proccess_Event('PlacedOnSwitch');
-        }
-        else if (x == "a"){ 
-            proccess_Event('PlacedOnScale');
-        }
-        else if (x == "s"){ 
-            proccess_Event('PlacedOnOpSwitch');
-        }
-        else if (x == "d"){ 
-            proccess_Event('PlacedInExchange');
-        }
-        else if (x == "f"){ 
-            proccess_Event('DroppedCube');
-        }
-        else if (x == "q"){ 
-            proccess_Event('CrossBaseline');
-        }
-        else if (x == "z"){
-            Undo_Event();
-        }
-        else if (x == "1"){ 
-            proccess_Period('StartAuto');
-        }
-        else if (x == "2"){ 
-            proccess_Period('StartTeleop');
-        }
-        else if (x == "3"){ 
-            proccess_Period('EndMatch');
-        }
-    }
 }
-
+	
 
 /*
  * Asses a penalty
@@ -591,11 +590,24 @@ function save_data()
     matchData += document.getElementById("match_type").value + ",";
 	
     matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
-    
+
+    matchData += auto_cross_baseline_counter + ",";
+    matchData += pick_up_cube_counter + ",";
+    matchData += dropped_cube_counter + ",";
+    matchData += placed_switch_counter + ",";
+    matchData += placed_scale_counter + ",";
+    matchData += placed_op_switch_counter + ",";
+    matchData += placed_in_exchange_counter + ",";
+    matchData += time_to_place_scale_avg + ",";
+    matchData += time_to_place_switch_avg + ",";
+    matchData += time_to_place_op_switch_avg + ",";
+    matchData += time_to_place_exchange_avg + ",";
+    matchData += cube_carry_time_accum + ",";
+
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
     matchData += tele_robot_block_time + ",";
-
+    
     matchData += end_climb_speed + ",";
     matchData += document.getElementById("platform_only").checked + ",";
     matchData += document.getElementById("bar_climb_attempt").checked + ",";
