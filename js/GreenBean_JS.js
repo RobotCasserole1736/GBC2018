@@ -91,26 +91,16 @@ function proccess_Period(type){
     var time = -1;
     
 	switch(type){
-		case 'StartAuto':
-		console.log('Start Of Auto');
-		auto_start_time = Date.now();
-		match_period = 'auto';
-        time = 0;
+        case 'StartAuto':
+            start_auto();
 		break;
 	
 		case 'StartTeleop':
-		console.log('Start of Teleop');
-		tele_start_time = Date.now();
-		match_period = 'tele';
-        time = 0;
+            start_teleop();
 		break;
 
 		case 'EndMatch':
-		console.log('End of Match');
-        match_end_time = Date.now() - tele_start_time;
-		console.log(match_end_time);
-        time = match_end_time;
-        match_period = 'none';
+            end_match();
 		break;
 	}
     
@@ -120,7 +110,30 @@ function proccess_Period(type){
     }
     
     disp_update();
-	
+    
+
+}
+
+function start_auto(){
+    console.log('Start Of Auto');
+    auto_start_time = Date.now();
+    match_period = 'auto';
+    time = 0;
+}
+
+function start_teleop(){
+    console.log('Start of Teleop');
+    tele_start_time = Date.now();
+    match_period = 'tele';
+    time = 0;
+}
+
+function end_match(){
+    console.log('End of Match');
+    match_end_time = Date.now() - tele_start_time;
+    console.log(match_end_time);
+    time = match_end_time;
+    match_period = 'none';
 }
 
 function proccess_Event(type){
@@ -280,7 +293,6 @@ function proccess_Event(type){
     
     if(time >= 0){
         event_stack.push([match_period, type, time/1000.0]);
-        console.log(getEventsString());
     }
 
     disp_update();
@@ -314,15 +326,26 @@ function update_match_state(){
 	
 
 function update_timer_display(){
+
+    //update timer display & handle state transitions
     if(match_period == 'none'){
         document.getElementById("TimeDisp").innerHTML = "Time = 0.0";
     } else if (match_period == 'tele'){
         tele_elapsed_time = Date.now() - tele_start_time;
         document.getElementById("TimeDisp").innerHTML = "Time = " + tele_elapsed_time/1000.0;
+        if(auto_elapsed_time >= 145000){ //teleop is 2min15sec plus a bit of extra
+            end_match();
+            disp_update();
+        }
     } else if (match_period == 'auto') {
         auto_elapsed_time = Date.now() - auto_start_time;
         document.getElementById("TimeDisp").innerHTML = "Time = " + auto_elapsed_time/1000.0;
+        if(auto_elapsed_time >= 18000){ //Auto is 15 seconds, plus a bit of leway just in case the pause between is bigger.
+            start_teleop();
+            disp_update();
+        }
     }
+
 }
 
 /* 
@@ -331,9 +354,6 @@ function update_timer_display(){
 function disp_update()
 {
     update_match_state()
-    
-
-
     
     switch(tele_driving)
     {
@@ -414,31 +434,43 @@ function disp_update()
  * Handles key presses
  */
 function keyPressHandler(event) {
-    var x = event.key;
-    console.log("The pressed key was: " + x);
-    if (x == " "){ 
-        proccess_Event('PickedUpCube');
-    }
-    if (x == "w"){ 
-        proccess_Event('PlacedOnSwitch');
-    }
-    if (x == "a"){ 
-        proccess_Event('PlacedOnScale');
-    }
-    if (x == "s"){ 
-        proccess_Event('PlacedOnOpSwitch');
-    }
-    if (x == "d"){ 
-        proccess_Event('PlacedInExchange');
-    }
-    if (x == "1"){ 
-        proccess_Period('StartAuto');
-    }
-    if (x == "2"){ 
-        proccess_Period('StartTeleop');
-    }
-    if (x == "3"){ 
-        proccess_Period('EndMatch');
+    if(document.getElementById("RobotObservations").style.display != "none"){
+        var x = event.key;
+        console.log("The pressed key was: " + x);
+        
+        if (x == " "){ 
+            proccess_Event('PickedUpCube');
+        }
+        else if (x == "w"){ 
+            proccess_Event('PlacedOnSwitch');
+        }
+        else if (x == "a"){ 
+            proccess_Event('PlacedOnScale');
+        }
+        else if (x == "s"){ 
+            proccess_Event('PlacedOnOpSwitch');
+        }
+        else if (x == "d"){ 
+            proccess_Event('PlacedInExchange');
+        }
+        else if (x == "f"){ 
+            proccess_Event('DroppedCube');
+        }
+        else if (x == "q"){ 
+            proccess_Event('CrossBaseline');
+        }
+        else if (x == "z"){
+            Undo_Event();
+        }
+        else if (x == "1"){ 
+            proccess_Period('StartAuto');
+        }
+        else if (x == "2"){ 
+            proccess_Period('StartTeleop');
+        }
+        else if (x == "3"){ 
+            proccess_Period('EndMatch');
+        }
     }
 }
 
@@ -481,26 +513,46 @@ function new_penalty(type)
 
 function save_data()
 {
+    var teamnum = document.getElementById("team_number_in").value;
+    
+    //ensure we have a team number
+    while(teamnum < 1){
+        teamnum = prompt("Please enter the team number:", "0");
+    }
+    
     var matchData = document.getElementById("scout_name_in").value + ",";
-    matchData += document.getElementById("team_number_in").value + ",";
+    matchData += teamnum + ","
     matchData += document.getElementById("match_number_in").value + ",";
     matchData += document.getElementById("match_type").value + ",";
 	
-
+    matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
+    
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
     matchData += tele_robot_block_time + ",";
 
     matchData += end_climb_speed + ",";
+    matchData += document.getElementById("platform_only").checked + ",";
+    matchData += document.getElementById("bar_climb_attempt").checked + ",";
+    matchData += document.getElementById("bar_climb_success").checked + ",";
+    matchData += document.getElementById("lift_partner_attempt").checked + ",";
+    matchData += document.getElementById("lift_partner_success").checked + ",";
+    matchData += document.getElementById("lift_by_partner_attempt").checked + ",";
+    matchData += document.getElementById("lift_by_partner_success").checked + ",";
+    
     matchData += penalty_auto + ",";
     matchData += technical_auto + ",";
     matchData += penalty_tele + ",";
     matchData += technical_tele + ",";
-    matchData += overallrating = document.getElementById("Overall_Rating").value + ",";   
+    matchData += document.getElementById("died_in_match").checked + ",";
+    
+    matchData += overallrating = document.getElementById("Overall_Rating").value + ",";     
     var comments = document.getElementById("Comments").value;
     comments = comments.replace(/,/g,"_"); //Get rid of commas so we don't mess up CSV
     comments = comments.replace("\n","   ");
-    matchData += comments + "\n";
+    matchData += comments + ",";
+    matchData += getEventsString() + "\n";
+    
     var existingData = localStorage.getItem("MatchData");
     if(existingData == null)
         localStorage.setItem("MatchData",matchData);
@@ -519,16 +571,15 @@ function reset_form()
     document.getElementById("team_number_in").value = "";
     document.getElementById("match_number_in").value++;
     
-
-	document.getElementById("startingPositionRight").checked = false;
-	document.getElementById("startingPositionCenter").checked = false;
-	document.getElementById("startingPositionLeft").checked = false;
+    document.getElementById("platform_only").checked = false;
+    document.getElementById("bar_climb_attempt").checked = false;
+    document.getElementById("bar_climb_success").checked = false;
+    document.getElementById("lift_partner_attempt").checked = false;
+    document.getElementById("lift_partner_success").checked = false;
+    document.getElementById("lift_by_partner_attempt").checked = false;
+    document.getElementById("lift_by_partner_success").checked = false;
     
-    
-
     event_stack = new Array();
-
-
 
     tele_robot_block = 0;
     tele_robot_block_time = 0;
