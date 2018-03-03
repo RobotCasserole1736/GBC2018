@@ -294,6 +294,8 @@ function proccess_Event(type){
 
 //Simple csv of all events in stack
 function getEventsString(){
+    var outputStr = "";
+    
     event_stack.forEach(function(item,index,array){
         outputStr += item;
         outputStr += ",";
@@ -376,6 +378,12 @@ function updateEventStats(){
             } else if(item[1] == 'DroppedCube') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 has_cube = false;
+            } else if(item[1] == 'StartTeleop') {
+                cube_carry_time_accum += (15 - cube_ack_time);
+                cube_ack_time = 0; //handle mode transition
+            } else if(item[1] == 'EndMatch') {
+                cube_carry_time_accum += (255 - cube_ack_time);
+                cube_ack_time = 0; //handle mode transition
             }
 
             //calc stdDevs   
@@ -412,6 +420,50 @@ function update_timer_display(){
         }
     }
 
+}
+
+/*
+ * Handles key presses
+ */
+function keyPressHandler(event) {
+    if(document.getElementById("RobotObservations").style.display != "none"){
+        var x = event.key;
+        console.log("The pressed key was: " + x);
+        
+        if (x == " "){ 
+            proccess_Event('PickedUpCube');
+        }
+        else if (x == "w"){ 
+            proccess_Event('PlacedOnSwitch');
+        }
+        else if (x == "a"){ 
+            proccess_Event('PlacedOnScale');
+        }
+        else if (x == "s"){ 
+            proccess_Event('PlacedOnOpSwitch');
+        }
+        else if (x == "d"){ 
+            proccess_Event('PlacedInExchange');
+        }
+        else if (x == "f"){ 
+            proccess_Event('DroppedCube');
+        }
+        else if (x == "q"){ 
+            proccess_Event('CrossBaseline');
+        }
+        else if (x == "z"){
+            Undo_Event();
+        }
+        else if (x == "1"){ 
+            proccess_Period('StartAuto');
+        }
+        else if (x == "2"){ 
+            proccess_Period('StartTeleop');
+        }
+        else if (x == "3"){ 
+            proccess_Period('EndMatch');
+        }
+    }
 }
 
 /* 
@@ -476,11 +528,11 @@ function disp_update()
 
     
     /* Average time to place */
-    document.getElementById("attp_scale").innerHTML = time_to_place_scale_avg;
-    document.getElementById("attp_switch").innerHTML = time_to_place_switch_avg;
-    document.getElementById("attp_opSwitch").innerHTML = time_to_place_op_switch_avg;
-    document.getElementById("attp_exchange").innerHTML = time_to_place_exchange_avg;
-    document.getElementById("accum_cube_carry").innerHTML = cube_carry_time_accum;
+    document.getElementById("attp_scale").innerHTML = time_to_place_scale_avg.toFixed(3);
+    document.getElementById("attp_switch").innerHTML = time_to_place_switch_avg.toFixed(3);
+    document.getElementById("attp_opSwitch").innerHTML = time_to_place_op_switch_avg.toFixed(3);
+    document.getElementById("attp_exchange").innerHTML = time_to_place_exchange_avg.toFixed(3);
+    document.getElementById("accum_cube_carry").innerHTML = cube_carry_time_accum.toFixed(3);
     
     /* penalty */
     document.getElementById("penalty_display1").innerHTML = penalty_auto;
@@ -498,55 +550,8 @@ function disp_update()
     document.getElementById("placedInExchangeCounter").innerHTML = placed_in_exchange_counter;
 			
 	
-		
-	}
-	
-
-
-/*
- * Handles key presses
- */
-function keyPressHandler(event) {
-    if(document.getElementById("RobotObservations").style.display != "none"){
-        var x = event.key;
-        console.log("The pressed key was: " + x);
-        
-        if (x == " "){ 
-            proccess_Event('PickedUpCube');
-        }
-        else if (x == "w"){ 
-            proccess_Event('PlacedOnSwitch');
-        }
-        else if (x == "a"){ 
-            proccess_Event('PlacedOnScale');
-        }
-        else if (x == "s"){ 
-            proccess_Event('PlacedOnOpSwitch');
-        }
-        else if (x == "d"){ 
-            proccess_Event('PlacedInExchange');
-        }
-        else if (x == "f"){ 
-            proccess_Event('DroppedCube');
-        }
-        else if (x == "q"){ 
-            proccess_Event('CrossBaseline');
-        }
-        else if (x == "z"){
-            Undo_Event();
-        }
-        else if (x == "1"){ 
-            proccess_Period('StartAuto');
-        }
-        else if (x == "2"){ 
-            proccess_Period('StartTeleop');
-        }
-        else if (x == "3"){ 
-            proccess_Period('EndMatch');
-        }
-    }
 }
-
+	
 
 /*
  * Asses a penalty
@@ -599,11 +604,24 @@ function save_data()
     matchData += document.getElementById("match_type").value + ",";
 	
     matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
-    
+
+    matchData += auto_cross_baseline_counter + ",";
+    matchData += pick_up_cube_counter + ",";
+    matchData += dropped_cube_counter + ",";
+    matchData += placed_switch_counter + ",";
+    matchData += placed_scale_counter + ",";
+    matchData += placed_op_switch_counter + ",";
+    matchData += placed_in_exchange_counter + ",";
+    matchData += time_to_place_scale_avg.toFixed(3) + ",";
+    matchData += time_to_place_switch_avg.toFixed(3) + ",";
+    matchData += time_to_place_op_switch_avg.toFixed(3) + ",";
+    matchData += time_to_place_exchange_avg.toFixed(3) + ",";
+    matchData += cube_carry_time_accum.toFixed(3) + ",";
+
     matchData += tele_driving + ",";
     matchData += tele_robot_block + ",";
     matchData += tele_robot_block_time + ",";
-
+    
     matchData += end_climb_speed + ",";
     matchData += document.getElementById("platform_only").checked + ",";
     matchData += document.getElementById("bar_climb_attempt").checked + ",";
@@ -654,15 +672,29 @@ function reset_form()
     document.getElementById("lift_by_partner_success").checked = false;
 
     event_stack = new Array();
+    
+    elapsed_time = 0.0;
+    match_period = 'none';
+    auto_cross_baseline_counter = 0;
+    pick_up_cube_counter = 0;
+    dropped_cube_counter = 0;
+    placed_switch_counter = 0;
+    placed_scale_counter = 0;
+    placed_op_switch_counter = 0;
+    placed_in_exchange_counter = 0;
+    time_to_place_scale_avg = 0;
+    time_to_place_switch_avg = 0;
+    time_to_place_op_switch_avg = 0;
+    time_to_place_exchange_avg = 0;
+    cube_carry_time_accum = 0;
 
     tele_robot_block = 0;
     tele_robot_block_time = 0;
 
-
     document.getElementById("driving_ability").value = 0;
     document.getElementById("robot_block").value = 0;
     document.getElementById("robot_block_time").value = 0;
-     document.getElementById("died_in_match").checked = false;
+    document.getElementById("died_in_match").checked = false;
     document.getElementById("no_show").checked = false;
 
     end_climb_speed = 0;
