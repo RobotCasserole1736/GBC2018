@@ -16,6 +16,8 @@
 var elapsed_time;
 var match_period;
 
+var cube_possessed = true;
+
 /*counters*/
 var auto_cross_baseline_counter = 0;
 var pick_up_cube_counter = 0;
@@ -99,7 +101,7 @@ function update_data()
 }
 
 function proccess_Period(type){
-    var time = -1;
+    elapsed_time = -1;
     
 	switch(type){
         case 'StartAuto':
@@ -115,11 +117,12 @@ function proccess_Period(type){
 		break;
 	}
     
-    if(time >= 0){
-        event_stack.push([match_period, type, time/1000.0]);
+    if(elapsed_time >= 0){
+        event_stack.push([match_period, type, elapsed_time/1000.0]);
         console.log(getEventsString());
     }
     
+    updateEventStats();
     disp_update();
     
 
@@ -129,21 +132,21 @@ function start_auto(){
     console.log('Start Of Auto');
     auto_start_time = Date.now();
     match_period = 'auto';
-    time = 0;
+    elapsed_time = 0;
 }
 
 function start_teleop(){
     console.log('Start of Teleop');
     tele_start_time = Date.now();
     match_period = 'tele';
-    time = 0;
+    elapsed_time = 0;
 }
 
 function end_match(){
     console.log('End of Match');
     match_end_time = Date.now() - tele_start_time;
     console.log(match_end_time);
-    time = match_end_time;
+    elapsed_time = match_end_time;
     match_period = 'none';
 }
 
@@ -308,8 +311,10 @@ function update_match_state(){
 
 
 function updateEventStats(){
+    console.log("updating match stats");    
     var has_cube = true; //Presume all robots start with cube. Even if they don't this is still an ok assumption
     var cube_ack_time = 0;
+    var prev_period_cube_pos_time = 0;
     
     /* placment accumulators */
     var time_to_place_scale_accum = 0;
@@ -328,6 +333,8 @@ function updateEventStats(){
     cube_carry_time_accum = 0;
     
     event_stack.forEach(function(item,index,array){
+        console.log(item);
+        
         //Count up events
         if(item[1] == 'CrossBaseline')
             auto_cross_baseline_counter++;
@@ -371,15 +378,22 @@ function updateEventStats(){
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 has_cube = false;
             } else if(item[1] == 'StartTeleop') {
+                console.log('teleop start with cube detected');
                 cube_carry_time_accum += (15 - cube_ack_time);
                 cube_ack_time = 0; //handle mode transition
             } else if(item[1] == 'EndMatch') {
-                cube_carry_time_accum += (255 - cube_ack_time);
+                cube_carry_time_accum += (135 - cube_ack_time);
                 cube_ack_time = 0; //handle mode transition
             }
-
+            
             //calc stdDevs   
             
+        }
+        
+        if(item[1] == 'StartAuto') {
+            has_cube = true;
+            cube_carry_time_accum = 0;
+            cube_ack_time = 0; //handle mode transition
         }
 
         //Track cube possession
@@ -387,7 +401,17 @@ function updateEventStats(){
             has_cube = true;
             cube_ack_time = item[2];
         }
+        
+        
     });
+    
+    //Take the final assignment of "has_cube" and send to the global variable
+    if(match_period == 'none'){
+        cube_possessed = true;
+    } else {
+        cube_possessed = has_cube;
+    }
+    
 }
 	
 
@@ -519,12 +543,13 @@ function disp_update()
     }
 
     
-    /* Average time to place */
+    /* Stats */
     document.getElementById("attp_scale").innerHTML = time_to_place_scale_avg.toFixed(3);
     document.getElementById("attp_switch").innerHTML = time_to_place_switch_avg.toFixed(3);
     document.getElementById("attp_opSwitch").innerHTML = time_to_place_op_switch_avg.toFixed(3);
     document.getElementById("attp_exchange").innerHTML = time_to_place_exchange_avg.toFixed(3);
     document.getElementById("accum_cube_carry").innerHTML = cube_carry_time_accum.toFixed(3);
+    document.getElementById("has_cube_disp").innerHTML = cube_possessed;
     
     /* penalty */
     document.getElementById("penalty_display1").innerHTML = penalty_auto;
