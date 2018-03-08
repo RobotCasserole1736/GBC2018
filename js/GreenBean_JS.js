@@ -20,12 +20,17 @@ var cube_possessed = true;
 
 /*counters*/
 var auto_cross_baseline_counter = 0;
-var pick_up_cube_counter = 0;
-var dropped_cube_counter = 0;
-var placed_switch_counter = 0;
-var placed_scale_counter = 0;
-var placed_op_switch_counter = 0;
-var placed_in_exchange_counter = 0;
+var auto_pick_up_cube_counter = 0;
+var auto_dropped_cube_counter = 0;
+var auto_placed_switch_counter = 0;
+var auto_placed_scale_counter = 0;
+var auto_placed_in_exchange_counter = 0;
+var teleop_pick_up_cube_counter = 0;
+var teleop_dropped_cube_counter = 0;
+var teleop_placed_switch_counter = 0;
+var teleop_placed_scale_counter = 0;
+var teleop_placed_op_switch_counter = 0;
+var teleop_placed_in_exchange_counter = 0;
 
 /* Averages */
 var time_to_place_scale_avg = 0;
@@ -324,32 +329,51 @@ function updateEventStats(){
     
     //Reset counters, will be repopulated.
     auto_cross_baseline_counter = 0;
-    pick_up_cube_counter = 0;
-    dropped_cube_counter = 0;
-    placed_scale_counter = 0;
-    placed_switch_counter = 0;
-    placed_op_switch_counter = 0;
-    placed_in_exchange_counter = 0;
+	auto_pick_up_cube_counter = 0;
+    auto_dropped_cube_counter = 0;
+    auto_placed_scale_counter = 0;
+    auto_placed_switch_counter = 0;
+    auto_placed_in_exchange_counter = 0;
+	
+    teleop_pick_up_cube_counter = 0;
+    teleop_dropped_cube_counter = 0;
+    teleop_placed_scale_counter = 0;
+    teleop_placed_switch_counter = 0;
+    teleop_placed_op_switch_counter = 0;
+    teleop_placed_in_exchange_counter = 0;
     cube_carry_time_accum = 0;
     
     event_stack.forEach(function(item,index,array){
         console.log(item);
         
         //Count up events
-        if(item[1] == 'CrossBaseline')
-            auto_cross_baseline_counter++;
-        else if(item[1] == 'PickedUpCube')
-            pick_up_cube_counter++;
-         else if(item[1] == 'DroppedCube')
-            dropped_cube_counter++;
-         else if(item[1] == 'PlacedOnScale')
-            placed_scale_counter++;
-         else if(item[1] == 'PlacedOnSwitch')
-            placed_switch_counter++;
-         else if(item[1] == 'PlacedOnOpSwitch')
-            placed_op_switch_counter++;
-         else if(item[1] == 'PlacedInExchange')
-            placed_in_exchange_counter++;
+		if(item[0] == 'auto') {
+			if(item[1] == 'CrossBaseline')
+				auto_cross_baseline_counter++;
+			else if(item[1] == 'PickedUpCube')
+				auto_pick_up_cube_counter++;
+			 else if(item[1] == 'DroppedCube')
+				auto_dropped_cube_counter++;
+			 else if(item[1] == 'PlacedOnScale')
+				auto_placed_scale_counter++;
+			 else if(item[1] == 'PlacedOnSwitch')
+				auto_placed_switch_counter++;
+			 else if(item[1] == 'PlacedInExchange')
+				auto_placed_in_exchange_counter++;
+		} else {
+			if(item[1] == 'PickedUpCube')
+				teleop_pick_up_cube_counter++;
+			 else if(item[1] == 'DroppedCube')
+				teleop_dropped_cube_counter++;
+			 else if(item[1] == 'PlacedOnScale')
+				teleop_placed_scale_counter++;
+			 else if(item[1] == 'PlacedOnSwitch')
+				teleop_placed_switch_counter++;
+			 else if(item[1] == 'PlacedOnOpSwitch')
+				teleop_placed_op_switch_counter++;
+			 else if(item[1] == 'PlacedInExchange')
+				teleop_placed_in_exchange_counter++;
+		}
         
             
         //calc averages
@@ -357,22 +381,22 @@ function updateEventStats(){
             if(item[1] == 'PlacedOnScale'){
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 time_to_place_scale_accum += (item[2] - cube_ack_time);
-                time_to_place_scale_avg = time_to_place_scale_accum / placed_scale_counter;
+                time_to_place_scale_avg = time_to_place_scale_accum / (teleop_placed_scale_counter + auto_placed_scale_counter);
                 has_cube = false;
             } else if(item[1] == 'PlacedOnSwitch') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 time_to_place_switch_accum += (item[2] - cube_ack_time);
-                time_to_place_switch_avg = time_to_place_switch_accum / placed_switch_counter;
+                time_to_place_switch_avg = time_to_place_switch_accum / (teleop_placed_switch_counter + auto_placed_switch_counter);
                 has_cube = false;
             } else if(item[1] == 'PlacedOnOpSwitch') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 time_to_place_op_switch_accum += (item[2] - cube_ack_time);
-                time_to_place_op_switch_avg = time_to_place_op_switch_accum / placed_op_switch_counter;
+                time_to_place_op_switch_avg = time_to_place_op_switch_accum / teleop_placed_op_switch_counter;
                 has_cube = false;
             } else if(item[1] == 'PlacedInExchange') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
                 time_to_place_exchange_accum += (item[2] - cube_ack_time);
-                time_to_place_exchange_avg = time_to_place_exchange_accum / placed_in_exchange_counter;
+                time_to_place_exchange_avg = time_to_place_exchange_accum / (teleop_placed_in_exchange_counter + auto_placed_in_exchange_counter);
                 has_cube = false;
             } else if(item[1] == 'DroppedCube') {
                 cube_carry_time_accum += (item[2] - cube_ack_time);
@@ -385,8 +409,6 @@ function updateEventStats(){
                 cube_carry_time_accum += (135 - cube_ack_time);
                 cube_ack_time = 0; //handle mode transition
             }
-            
-            //calc stdDevs   
             
         }
         
@@ -559,12 +581,12 @@ function disp_update()
     
 	/*match event*/
     document.getElementById("baseLineCounter").innerHTML = auto_cross_baseline_counter;
-    document.getElementById("pickedUpCubeCounter").innerHTML = pick_up_cube_counter;
-    document.getElementById("droppedCubeCounter").innerHTML = dropped_cube_counter;
-    document.getElementById("placedOnScaleCounter").innerHTML = placed_scale_counter;
-    document.getElementById("placedOnSwitchCounter").innerHTML = placed_switch_counter;
-    document.getElementById("placedOnOppSwitchCounter").innerHTML = placed_op_switch_counter;
-    document.getElementById("placedInExchangeCounter").innerHTML = placed_in_exchange_counter;
+    document.getElementById("pickedUpCubeCounter").innerHTML = teleop_pick_up_cube_counter + auto_pick_up_cube_counter;
+    document.getElementById("droppedCubeCounter").innerHTML = teleop_dropped_cube_counter + auto_dropped_cube_counter;
+    document.getElementById("placedOnScaleCounter").innerHTML = teleop_placed_scale_counter + auto_placed_scale_counter;
+    document.getElementById("placedOnSwitchCounter").innerHTML = teleop_placed_switch_counter + auto_placed_switch_counter;
+    document.getElementById("placedOnOppSwitchCounter").innerHTML = teleop_placed_op_switch_counter;
+    document.getElementById("placedInExchangeCounter").innerHTML = teleop_placed_in_exchange_counter + auto_placed_in_exchange_counter;
 			
 	
 }
@@ -623,12 +645,17 @@ function save_data()
     matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
 
     matchData += auto_cross_baseline_counter + ",";
-    matchData += pick_up_cube_counter + ",";
-    matchData += dropped_cube_counter + ",";
-    matchData += placed_switch_counter + ",";
-    matchData += placed_scale_counter + ",";
-    matchData += placed_op_switch_counter + ",";
-    matchData += placed_in_exchange_counter + ",";
+    matchData += auto_pick_up_cube_counter + ",";
+    matchData += auto_dropped_cube_counter + ",";
+    matchData += auto_placed_switch_counter + ",";
+    matchData += auto_placed_scale_counter + ",";
+    matchData += auto_placed_in_exchange_counter + ",";
+    matchData += teleop_pick_up_cube_counter + ",";
+    matchData += teleop_dropped_cube_counter + ",";
+    matchData += teleop_placed_switch_counter + ",";
+    matchData += teleop_placed_scale_counter + ",";
+    matchData += teleop_placed_op_switch_counter + ",";
+    matchData += teleop_placed_in_exchange_counter + ",";
     matchData += time_to_place_scale_avg.toFixed(3) + ",";
     matchData += time_to_place_switch_avg.toFixed(3) + ",";
     matchData += time_to_place_op_switch_avg.toFixed(3) + ",";
@@ -693,12 +720,17 @@ function reset_form()
     elapsed_time = 0.0;
     match_period = 'none';
     auto_cross_baseline_counter = 0;
-    pick_up_cube_counter = 0;
-    dropped_cube_counter = 0;
-    placed_switch_counter = 0;
-    placed_scale_counter = 0;
-    placed_op_switch_counter = 0;
-    placed_in_exchange_counter = 0;
+    auto_pick_up_cube_counter = 0;
+    auto_dropped_cube_counter = 0;
+    auto_placed_switch_counter = 0;
+    auto_placed_scale_counter = 0;
+    auto_placed_in_exchange_counter = 0;
+    teleop_pick_up_cube_counter = 0;
+    teleop_dropped_cube_counter = 0;
+    teleop_placed_switch_counter = 0;
+    teleop_placed_scale_counter = 0;
+    teleop_placed_op_switch_counter = 0;
+    teleop_placed_in_exchange_counter = 0;
     time_to_place_scale_avg = 0;
     time_to_place_switch_avg = 0;
     time_to_place_op_switch_avg = 0;
