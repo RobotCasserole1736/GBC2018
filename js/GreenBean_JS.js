@@ -445,7 +445,7 @@ function update_timer_display(){
     } else if (match_period == 'tele'){
         tele_elapsed_time = Date.now() - tele_start_time;
         document.getElementById("TimeDisp").innerHTML = "Time = " + tele_elapsed_time/1000.0;
-        if(auto_elapsed_time >= 145000){ //teleop is 2min15sec plus a bit of extra
+        if(tele_elapsed_time >= 145000){ //teleop is 2min15sec plus a bit of extra
             end_match();
             disp_update();
         }
@@ -633,17 +633,14 @@ function save_data()
 {
     var teamnum = document.getElementById("team_number_in").value;
     
-    //ensure we have a team number
-    while(teamnum < 1){
-        teamnum = prompt("Please enter the team number:", "0");
-    }
-    
     var matchData = document.getElementById("scout_name_in").value + ",";
     matchData += teamnum + ","
     matchData += document.getElementById("match_number_in").value + ",";
     matchData += document.getElementById("match_type").value + ",";
-	
-    matchData += document.querySelector('input[name="start_pos_sel"]:checked').value + ",";
+    
+    
+    var startPosSel = document.querySelector('input[name="start_pos_sel"]:checked');
+    matchData += startPosSel.value + ",";
 
     matchData += auto_cross_baseline_counter + ",";
     matchData += auto_pick_up_cube_counter + ",";
@@ -715,6 +712,8 @@ function reset_form()
     document.getElementById("lift_partner_success").checked = false;
     document.getElementById("lift_by_partner_attempt").checked = false;
     document.getElementById("lift_by_partner_success").checked = false;
+    
+    document.querySelector('input[name="start_pos_sel"]:checked').checked = false;
 
     event_stack = new Array();
     
@@ -829,10 +828,25 @@ function Undo_Penalty()
     update_data();
 }
 
+function validate_data()
+{  
+    if(document.getElementById("team_number_in").value < 1){
+        alert("Cannot submit data: please enter a TEAM NUMBER.");
+        return -1;
+    } else if (document.querySelector('input[name="start_pos_sel"]:checked') == null){
+        alert("Cannot submit data: Please select a STARTING POSITION.");
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
 function Submit_Report()
 {
-    save_data();
-    reset_form();
+    if(validate_data() == 0){ 
+        save_data();
+        reset_form();
+    }
 }
 
 function Clear_History()
