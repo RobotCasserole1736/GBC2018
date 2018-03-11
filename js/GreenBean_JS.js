@@ -470,6 +470,7 @@ function keyPressHandler(event) {
         
         if (x == " "){ 
             proccess_Event('PickedUpCube');
+            event.preventDefault();
         }
         else if (x == "w"){ 
             proccess_Event('PlacedOnSwitch');
