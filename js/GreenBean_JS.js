@@ -124,7 +124,6 @@ function proccess_Period(type){
     
     if(elapsed_time >= 0){
         event_stack.push([match_period, type, elapsed_time/1000.0]);
-        console.log(getEventsString());
     }
     
     updateEventStats();
@@ -344,7 +343,6 @@ function updateEventStats(){
     cube_carry_time_accum = 0;
     
     event_stack.forEach(function(item,index,array){
-        console.log(item);
         
         //Count up events
 		if(item[0] == 'auto') {
