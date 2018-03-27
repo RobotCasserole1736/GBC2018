@@ -691,6 +691,86 @@ li {
 }
 
 
+.tooltip_foul {
+	
+position: relative;
+display: inline-block;
+}
+
+.tooltip_foul .tooltiptext {
+	visibility: hidden;
+	width: 240px;
+	background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
+.tooltip_foul:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+.tooltip_techFoul {
+	
+position: relative;
+display: inline-block;
+}
+
+.tooltip_techFoul .tooltiptext {
+	visibility: hidden;
+	width: 240px;
+	background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
+.tooltip_techFoul:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+.tooltip_postSliders {
+	
+position: relative;
+display: inline-block;
+}
+
+.tooltip_postSliders .tooltiptext {
+	visibility: hidden;
+	width: 240px;
+	background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+}
+.tooltip_postSliders:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+
+
 
 
 

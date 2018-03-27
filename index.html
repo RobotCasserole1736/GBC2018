@@ -134,7 +134,7 @@
                     <br>
                     <br>
                     <h2>Penalties</h2>
-                    <button onclick="Penalty('penalty');">Foul</button>
+                    <button onclick="Penalty('penalty');"><div class="tooltip_foul"><span class="tooltiptext">Foul Examples</span></div>Foul</button>
                     <button onclick="Penalty('technical');">Technical Foul</button>
                     <br>
                     <a>Auto Fouls :  </a><a id="penalty_display1">0</a>
@@ -216,29 +216,29 @@
             <input type="checkbox" name="no_show" id="no_show"><div class="tooltip_noShow">No-Show or Disabled Throughout Match<span class="tooltiptext">Robot Didn't Show up or Didn't do Anything the Entire Match</span></div><br>
             <input type="checkbox" name="was_hindered" id="was_hindered"><div class="tooltip">This Robot was Hindered by Something During the Match<span class="tooltiptext">The Robot was Unable to do its Best Because of Another Robot on the Field</span></div><br>
             <br>
-			<a>Overall Rating :  </a>
-            <a id="post_overallrating">Do Not Pick</a>
+			<a><div class="tooltip_postSliders"><span class="tooltiptext">Should We Pick This Team</span>Overall Rating :  </a>
+            <a id="post_overallrating">Do Not Pick</a></div>
             <div id="shortslider">
                 <input class="bar" type="range" id ="Overall_Rating" name="Overall_Rating" min="0" max="3" value ="0" onchange="update_data();">
                 <span class="highlight"></span>
             </div>
             
-            <a>How's My Driving? :  </a>
-            <a id="tele_driving_display">Little or No Movement</a>
+            <a><div class="tooltip_postSliders"><span class="tooltiptext">Did the Driver a lot and make good decisions</span>How's My Driving? :  </a>
+            <a id="tele_driving_display">Little or No Movement</a></div>
             <div id="shortslider">
                 <input class="bar" type="range" id ="driving_ability" name="driving_ability" min="0" max="3" value ="0" onchange="update_data();">
                 <span class="highlight"></span>
             </div>
             
-            <a>On-Robot Defense Effectiveness :  </a>
-            <a id="tele_robot_block_display">Awful / None</a>
+            <a><div class="tooltip_postSliders"><span class="tooltiptext">Use the Slider if the Robot Spent Time Defending Other Robots</span>On-Robot Defense Effectiveness :  </a>
+            <a id="tele_robot_block_display">Awful / None</a></div>
             <div id="shortslider">
                 <input class="bar" type="range" id ="robot_block" name="robot_block" min="0" max="3" value ="0" onchange="update_data();">
                 <span class="highlight"></span>
             </div>
             
-            <a>On-Robot Defense Time    :  </a>
-            <a id="tele_robot_block_time_display">0</a> seconds
+            <a><div class="tooltip_postSliders"><span class="tooltiptext">Approximate How Much Time The Robot Spent Defending</span>On-Robot Defense Time    :  </a>
+            <a id="tele_robot_block_time_display">0</a> seconds</div>
             <div id="slider">
                 <input class="bar" type="range" id ="robot_block_time" name="robot_block_time" min="0" max="120" value ="0" onchange="update_data();">
                 <span class="highlight"></span>
