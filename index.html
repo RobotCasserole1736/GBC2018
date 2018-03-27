@@ -194,9 +194,9 @@
 
             </div>
             
-            <div id="EndSliders">
-               Capture/Scale Speed :  
-               <a id="end_climb_speed_display">0</a> seconds
+            <div id="EndSliders">											
+              <div class="tooltip_captureSpeed"><span class="tooltiptext">!!! I don't recall what this does !!!</span> Capture/Scale Speed :  
+               <a id="end_climb_speed_display">0</a> seconds </div>
                <div id="slider">
                    <input class="bar" type="range" id ="climb_speed" name="climb_speed" min="0" max="20" value ="0" onchange="update_data();">
                    <span class="highlight"></span>
@@ -212,10 +212,11 @@
             <!-- ----------------------------- -->
             <br>
             
-            <input type="checkbox" name="died_in_match" id="died_in_match">Died During Match <br>
-            <input type="checkbox" name="no_show" id="no_show">No-Show or Disabled Throughout Match<br>
-            <input type="checkbox" name="was_hindered" id="was_hindered">This Robot was Hindered by Something During the Match<br>
-            <a>Overall Rating :  </a>
+            <input type="checkbox" name="died_in_match" id="died_in_match"><div class="tooltip_died">Died During Match<span class="tooltiptext">The Robot Died During Match but Worked Most of the Match</span></div><br> 
+            <input type="checkbox" name="no_show" id="no_show"><div class="tooltip_noShow">No-Show or Disabled Throughout Match<span class="tooltiptext">Robot Didn't Show up or Didn't do Anything the Entire Match</span></div><br>
+            <input type="checkbox" name="was_hindered" id="was_hindered"><div class="tooltip">This Robot was Hindered by Something During the Match<span class="tooltiptext">The Robot was Unable to do its Best Because of Another Robot on the Field</span></div><br>
+            <br>
+			<a>Overall Rating :  </a>
             <a id="post_overallrating">Do Not Pick</a>
             <div id="shortslider">
                 <input class="bar" type="range" id ="Overall_Rating" name="Overall_Rating" min="0" max="3" value ="0" onchange="update_data();">
