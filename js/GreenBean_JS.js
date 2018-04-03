@@ -677,9 +677,9 @@ function save_data()
     matchData += technical_tele + ",";
     matchData += document.getElementById("died_in_match").checked + ",";
     matchData += document.getElementById("no_show").checked + ",";
-    matchData += document.getElementById("was_hindered").checked + ",";
 	
     matchData += overallrating = document.getElementById("Overall_Rating").value + ",";     
+    matchData += document.getElementById("was_hindered").checked + ",";
     var comments = document.getElementById("Comments").value;
     comments = comments.replace(/,/g,"_"); //Get rid of commas so we don't mess up CSV
     comments = comments.replace("\n","   ");
